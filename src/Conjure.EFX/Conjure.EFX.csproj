@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\Conjure.NScribe\Conjure.NScribe.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Humanizer" Version="2.11.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.*" />
+    <!--
+      - We actually need to include the package reference directly for runtime access to the design time artifacts
+      -->
+    <!--
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.*">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Scriban" Version="4.0.1" />
+    
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
+</Project>

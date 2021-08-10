@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.*">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.*" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.3" />
+  </ItemGroup>
+
+  <!--
+    - For now we need to include these as build-in dependencies to resolve the IDesignTimeServices
+    - implementation for each one.  Eventually, we want to come up with a mechanism to leverage the
+    - actual library included in the target project so we don't need to carry these with us.
+    -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.*" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.*" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.1.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="_efx/*/preview/**" />
+    <None Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

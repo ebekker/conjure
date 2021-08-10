@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <!--
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild> <!- - Generates a package at build - ->
+    <IncludeBuildOutput>false</IncludeBuildOutput> <!- - Do not include the generator as a lib dependency - ->
+  </PropertyGroup>
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
+    <ProjectReference Include="..\Conjure.NScribe\Conjure.NScribe.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
+  </ItemGroup>
+
+  <!--
+   - Unfortuantely, to take on any private source-gen-time dependency,
+   - we have to go through some acrobatics until this bit is sorted out
+   - for Source Generators:
+   -    https://github.com/dotnet/roslyn/discussions/47517#discussioncomment-76675
+   -->
+
+  <ItemGroup>
+    <!--
+     - Take a private dependency on Scriban (PrivateAssets=all) Consumers of this generator will not reference it.
+     - Set GeneratePathProperty=true so we can reference the binaries via the PKGScriban property
+     - For reference:
+     -    https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages
+     -->
+    <!-- <PackageReference Include="Scriban" Version="4.0.1"
+         PrivateAssets="all" GeneratePathProperty="true" /> -->
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <!-- <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" /> -->
+    </ItemGroup>
+  </Target>
+
+</Project>
