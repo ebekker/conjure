@@ -18,7 +18,9 @@ namespace Conjure.EFX.Impl
         private readonly ILogger _logger;
         private readonly ModelGenerator _modelGenerator;
 
-        private string[] _templates;
+        private string[] _topTemplates;
+        private string[] _entityTemplates;
+        private string[] _entityModelTemplates;
 
         public CodeGenerator(ILoggerFactory logger)
         {
@@ -39,7 +41,12 @@ namespace Conjure.EFX.Impl
 
             var context = _modelGenerator.Generate(Options, databaseModel, databaseProviders.mapping);
 
-            _templates = Directory.GetFiles(Options.Options.ProfilePath, "*.scriban-cs");
+            var topTemplatesPath = Path.GetFullPath(Path.Combine(Options.Options.ProfilePath, "templates"));
+            _topTemplates = Directory.GetFiles(topTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+            var childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities"));
+            _entityTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+            childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities/models"));
+            _entityModelTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
 
             GenerateFiles(context);
         }
@@ -48,10 +55,14 @@ namespace Conjure.EFX.Impl
         {
             public ProfileOptions Options { get; init; }
             public EntityContext EntityContext { get; init; }
+
+            public Model EntityModel { get; set; }
         }
 
         private void GenerateFiles(EntityContext entityContext)
         {
+            Entity targetEntity = null;
+
             var genContext = new EFXGeneratorContext
             {
                 Options = Options,
@@ -61,24 +72,49 @@ namespace Conjure.EFX.Impl
             scriptObject.Import(typeof(MethodSupport));
             scriptObject.Import(typeof(GenerationExtensions));
             scriptObject.Import(genContext, renamer: mi => mi.Name);
+            scriptObject.Import("Entity", () => targetEntity);
             var templateContext = new TemplateContext
             {
                 MemberRenamer = mi => mi.Name,
             };
             templateContext.PushGlobal(scriptObject);
 
-            foreach (var templatePath in _templates)
+            foreach (var templatePath in _topTemplates)
             {
-                var templateName = Path.GetFileNameWithoutExtension(templatePath);
-                var outputPath = Path.GetFullPath(Path.Combine(Options.Project.Directory, "preview", $"{templateName}.cs"));
-                var outputDir = Path.GetDirectoryName(outputPath);
-                _logger.LogInformation("Generating from template [{0}] to [{1}]", templateName, outputPath);
+                GenerateTemplateFile(entityContext, templatePath, templateContext);
+            }
 
-                Directory.CreateDirectory(outputDir);
-                var content = File.ReadAllText(templatePath);
-                var template = Template.Parse(content);
-                var output = template.Render(templateContext);
-                File.WriteAllText(outputPath, output);
+            if (_entityTemplates.Length > 0)
+            {
+                foreach (var entity in entityContext.Entities)
+                {
+                    Options.Variables.Set(entity);
+                    targetEntity = entity;
+
+                    foreach (var templatePath in _entityTemplates)
+                    {
+                        GenerateTemplateFile(entityContext, templatePath, templateContext, "entities");
+
+                        if (_entityModelTemplates.Length > 0 && entity.Models.Count > 0)
+                        {
+                            foreach (var model in entity.Models)
+                            {
+                                Options.Variables.Set(model);
+                                genContext.EntityModel = model;
+
+                                foreach (var modelTemplatePath in _entityModelTemplates)
+                                {
+                                    GenerateTemplateFile(entityContext, templatePath, templateContext, "entities/models");
+                                }
+
+                                genContext.EntityModel = null;
+                                Options.Variables.Remove(model);
+                            }
+                        }
+                    }
+
+                    Options.Variables.Remove(entity);
+                }
             }
 
             // GenerateDataContext(entityContext);
@@ -91,6 +127,24 @@ namespace Conjure.EFX.Impl
             // GenerateModelClasses(entityContext);
 
             // GenerateScriptTemplates(entityContext);
+        }
+
+        private void GenerateTemplateFile(EntityContext entityContext,
+            string templatePath, TemplateContext templateContext, string outputPrefix = null)
+        {
+            var templateName = Path.GetFileNameWithoutExtension(templatePath);
+            var outputPath = Path.Combine(Options.Project.Directory, "preview", outputPrefix??"", $"{templateName}.cs");
+            outputPath = Path.GetFullPath(outputPath);
+            outputPath = Options.Variables.Evaluate(outputPath);
+            _logger.LogInformation("Generating from template [{0}] to [{1}]", templateName, outputPath);
+
+            var outputDir = Path.GetDirectoryName(outputPath);
+            Directory.CreateDirectory(outputDir);
+
+            var content = File.ReadAllText(templatePath);
+            var template = Template.Parse(content);
+            var output = template.Render(templateContext);
+            File.WriteAllText(outputPath, output);
         }
 
         private void GenerateDataContext(EntityContext entityContext)

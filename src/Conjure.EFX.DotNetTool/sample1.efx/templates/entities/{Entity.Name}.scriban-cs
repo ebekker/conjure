@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+
+namespace {{Entity.EntityNamespace}}
+{
+    {{~
+    $entityClass = Entity.EntityClass | to_safe_name
+    -}}
+
+    {{-if Options.Data.Entity.Document~}}
+    /// <summary>
+    /// Entity class representing data for table '{{Entity.TableName}}'
+    /// </summary>
+    {{~end~}}
+    public partial class {{$entityClass}}{{if Entity.EntityBaseClass}}
+        : {{Entity.EntityBaseClass | to_safe_name}}{{end}}
+    {
+    }
+}
