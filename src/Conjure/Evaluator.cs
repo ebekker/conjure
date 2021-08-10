@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Conjure
 {
+    // This code is _*heavily*_ based on EFG:
+    //    https://github.com/loresoft/EntityFrameworkCore.Generator/
+
     public class Evaluator
     {
-        // This code is _*heavily*_ based on EFG:
-        //    https://github.com/loresoft/EntityFrameworkCore.Generator/
-
         public delegate bool TryGetValue<K, V>(K key, out V V);
 
         public static string Eval(string variableOrText, IDictionary<string, string> variables) =>
