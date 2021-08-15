@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Tracker.Core.Data.Mapping
 {
     /// <summary>
-    /// Allows configuration for an entity type <see cref="Tracker.Core.Data.Entities." />
+    /// Allows configuration for an entity type <see cref="Tracker.Core.Data.Entities.UserRole" />
     /// </summary>
     public partial class UserRoleMap
-        : IEntityTypeConfiguration<Tracker.Core.Data.Entities.>
+        : IEntityTypeConfiguration<Tracker.Core.Data.Entities.UserRole>
     {
         /// <summary>
         /// Configures the entity of type <see cref="Tracker.Core.Data.Entities.UserRole" />

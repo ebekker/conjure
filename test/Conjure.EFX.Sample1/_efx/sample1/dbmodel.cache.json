@@ -2255,14 +2255,14 @@
       "$id": "132",
       "$type": "System.Collections.Generic.List`1[[System.String, System.Private.CoreLib]], System.Private.CoreLib",
       "$values": [
-        "C:\\local\\prj\\bek\\conjure\\src\\Conjure.EFX.DotNetTool\\bin\\Debug\\net6.0\\Conjure.EFX.DotNetTool.dll",
+        "C:\\Users\\ebekker\\.nuget\\packages\\conjure.efx.dotnettool\\0.1.0\\tools\\net6.0\\any\\Conjure.EFX.DotNetTool.dll",
         "refresh",
         "sample1"
       ]
     },
-    "EFX:CLI": "C:\\local\\prj\\bek\\conjure\\src\\Conjure.EFX.DotNetTool\\bin\\Debug\\net6.0\\Conjure.EFX.DotNetTool.dll refresh sample1",
+    "EFX:CLI": "C:\\Users\\ebekker\\.nuget\\packages\\conjure.efx.dotnettool\\0.1.0\\tools\\net6.0\\any\\Conjure.EFX.DotNetTool.dll refresh sample1",
     "EFX:CLRVersion": "6.0.0",
-    "EFX:CreatedTime": "2021-08-09T20:58:11.5391632-04:00",
+    "EFX:CreatedTime": "2021-08-14T09:12:51.8026506-04:00",
     "EFX:OS": {
       "$id": "133",
       "$type": "System.OperatingSystem, System.Private.CoreLib",

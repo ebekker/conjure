@@ -7,7 +7,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// A <see cref="DbContext" /> instance represents a session with the database and can be used to query and save instances of entities.
     /// </summary>
-    public partial class TrackerContext : TrackerContextBase
+    public partial class TrackerContext : DbContext
     {        /// <summary>
         /// Initializes a new instance of the <see cref="TrackerContext"/> class.
         /// </summary>

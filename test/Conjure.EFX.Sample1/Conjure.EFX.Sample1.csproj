@@ -6,16 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Conjure.NScribe\Conjure.NScribe.csproj"
-        OutputItemType="Analyzer"
-        ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\src\Conjure.EFX\Conjure.EFX.csproj"
-        OutputItemType="Analyzer"
-        ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\Conjure.NScribe\Conjure.NScribe.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\Conjure.EFX\Conjure.EFX.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="*.nscribe/**" />
+    <None Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
