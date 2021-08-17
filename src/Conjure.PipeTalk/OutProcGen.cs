@@ -2,6 +2,12 @@ using System;
 
 namespace Conjure.PipeTalk
 {
+    /// <summary>
+    /// Defines the rules and semantics of the "Out-of-Process Generator"
+    /// communication protocol for a source generator implemented as a
+    /// conventional in-process source generator component communicating
+    /// with an out-of-process worker process.
+    /// </summary>
     public static class OutProcGenProtocol
     {
         public const string VersTag = "VERS";
@@ -23,6 +29,11 @@ namespace Conjure.PipeTalk
         }
     }
 
+    /// <summary>
+    /// Implements the client end of the
+    /// <see cref="OutProcGenProtocol"
+    /// ><i>Out-of-Process Generator</i> protocol</see>.
+    /// </summary>
     public class OutProcGenClient : IDisposable
     {
         private Client _client;
@@ -35,7 +46,8 @@ namespace Conjure.PipeTalk
 
         public void Dispose()
         {
-            _client.Dispose();
+            _client?.Dispose();
+            _client = null;
         }
 
         public void Connect()
@@ -101,6 +113,11 @@ namespace Conjure.PipeTalk
         }
     }
 
+    /// <summary>
+    /// Implements the server end of the
+    /// <see cref="OutProcGenProtocol"
+    /// ><i>Out-of-Process Generator</i> protocol</see>.
+    /// </summary>
     public class OutProcGenServer : IDisposable
     {
         private Server _server;
@@ -142,114 +159,4 @@ namespace Conjure.PipeTalk
             _server.Write(OutProcGenProtocol.EndTag);
         }
     }
-
-
-
-    //    public static void StartSession(this StreamWriter writer, StreamReader reader)
-    //    {
-    //        Console.WriteLine("Starting Session");
-    //        writer.WriteLine(VersLine);
-    //        writer.Flush();
-
-    //        if (!string.Equals(reader.ReadLine(), AckLine))
-    //            throw new Exception("did not receive ACK");
-    //    }
-
-    //    public static void StartProfile(this StreamWriter writer, StreamReader reader, string profile)
-    //    {
-    //        Console.WriteLine($"Starting profile: {profile}");
-    //        writer.WriteLine(ProfileLine + profile);
-    //        writer.Flush();
-
-    //        if (!string.Equals(reader.ReadLine(), AckLine))
-    //            throw new Exception("did not receive ACK");
-    //    }
-
-    //    public static void AddFile(this StreamWriter writer, StreamReader reader, string path, string content)
-    //    {
-    //        Console.WriteLine($"Adding File: {path}, {content.Length}");
-    //        var b64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(content));
-    //        writer.WriteLine(FileLine + content.Length + ":" + path);
-    //        writer.WriteLine(BodyLine + b64);
-    //        writer.Flush();
-
-    //        if (!string.Equals(reader.ReadLine(), AckLine))
-    //            throw new Exception("did not receive ACK");
-    //    }
-
-    //    public static void EndSession(this StreamWriter writer, StreamReader reader)
-    //    {
-    //        Console.WriteLine("Ending Session");
-    //        writer.WriteLine(EndLine);
-    //        writer.Flush();
-
-    //        if (!string.Equals(reader.ReadLine(), AckLine))
-    //            throw new Exception("did not receive ACK");
-    //    }
-
-    //    public static void ReadProfileFiles(this StreamReader reader, StreamWriter writer,
-    //        Action<string, string, string> handler)
-    //    {
-    //        string profile = null;
-    //        string path = null;
-    //        int size = -1;
-
-    //        var line = reader.ReadLine();
-    //        while (line != EndLine)
-    //        {
-    //            var start = line.Substring(0, 30);
-    //            Console.WriteLine("Got line starting with: " + start);
-
-    //            if (line.StartsWith(ProfileLine))
-    //            {
-    //                profile = line.Substring(ProfileLine.Length);
-    //                path = null;
-    //                size = -1;
-    //                writer.WriteLine(AckLine);
-    //                writer.Flush();
-    //            }
-    //            else if (line.StartsWith(FileLine))
-    //            {
-    //                var file = line.Substring(FileLine.Length).Split(new[] {':'},  2);
-    //                path = file[0];
-    //                size = int.Parse(file[1]);
-    //            }
-    //            else if (line.StartsWith(BodyLine))
-    //            {
-    //                var b64 = line.Substring(BodyLine.Length);
-    //                var body = Encoding.UTF8.GetString(Convert.FromBase64String(b64));
-    //                if (body.Length != size)
-    //                {
-    //                    throw new Exception("content length does not match expected");
-    //                }
-
-    //                handler(profile, path, body);
-
-    //                writer.WriteLine(AckLine);
-    //                writer.Flush();
-
-    //                path = null;
-    //                size = -1;
-    //            }
-    //            else
-    //            {
-    //                throw new Exception("protocol violation, unexpected: " + line);
-    //            }
-
-    //            line = reader.ReadLine();
-    //        }
-    //    }
-
-    //    public static void ReadSession(this StreamReader reader, StreamWriter writer)
-    //    {
-    //        var vers = reader.ReadLine();
-    //        if (vers != VersLine)
-    //        {
-    //            throw new Exception("Incompatible version found");
-    //        }
-    //        writer.WriteLine(AckLine);
-    //        writer.Flush();
-    //        Console.WriteLine("Got Session: " + vers);
-    //    }
-    //}
 }

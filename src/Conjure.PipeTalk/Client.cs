@@ -2,6 +2,10 @@ using System.IO.Pipes;
 
 namespace Conjure.PipeTalk
 {
+    /// <summary>
+    /// Implements the client end of the
+    /// <see cref="Protocol"><i>Pipe Talk</i> protocol</see>.
+    /// </summary>
     public class Client : Protocol
     {
         private NamedPipeClientStream _clientStream;

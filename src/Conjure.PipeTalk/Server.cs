@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Conjure.PipeTalk
 {
+    /// <summary>
+    /// Implements the server end of the
+    /// <see cref="Protocol"><i>Pipe Talk</i> protocol</see>.
+    /// </summary>
     public class Server : Protocol
     {
         private NamedPipeServerStream _serverStream;

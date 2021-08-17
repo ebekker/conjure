@@ -6,7 +6,8 @@ using System.Text;
 namespace Conjure.PipeTalk
 {
     /// <summary>
-    /// Implements a super-simple protocol for exchange of information.
+    /// Implements a super-simple protocol for exchange of information over
+    /// a named pipe colloquially known as "Pipe Talk".
     /// </summary>
     /// <remarks>
     /// The protocol is a simple, string-based, line-oriented, exchange of
