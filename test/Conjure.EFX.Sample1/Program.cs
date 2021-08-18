@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Tracker.Core.Data;
 using System.Linq;
+
+using Tracker.Core.Data;
+using Tracker.Core.Data.Entities;
 using AdvWorks.Data;
 
 namespace Tracker.Core.Data
@@ -65,8 +67,8 @@ namespace Conjure.EFX.Sample1
                 .AddJsonFile($"appsettings.{env}.json", optional: true)
                 .Build();
 
-            //TestTracker();
-            TestAdvWorks();
+            TestTracker();
+            //TestAdvWorks();
         }
 
         static void TestAdvWorks()
@@ -102,6 +104,9 @@ namespace Conjure.EFX.Sample1
         {
             var conn = _config.GetConnectionString("Tracker");
             Console.WriteLine("Connection to: " + conn);
+
+            Console.WriteLine("Querying against Entity: " + User.GetEntityClass());
+            Console.WriteLine("                  Table: " + User.GetTableName());
 
             using var db = new TrackerContext(conn);
             var query = db.Users

@@ -12,4 +12,10 @@ dotnet tool install --add-source ../../src/Conjure.EFX.DotNetTool/nupkg Conjure.
 
 ## Run the tool
 dotnet tool run efx -- --help
+
+## Restore
+dotnet tool restore --add-source ../../src/Conjure.EFX.DotNetTool/nupkg Conjure.EFX.DotNetTool
+
+## Update
+dotnet tool update --add-source ../../src/Conjure.EFX.DotNetTool/nupkg Conjure.EFX.DotNetTool
 ```

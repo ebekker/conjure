@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,8 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Conjure.NScribe\Conjure.NScribe.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\src\Conjure.EFX\Conjure.EFX.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\Conjure.NScribe\Conjure.NScribe.csproj"
+        OutputItemType="Analyzer"
+        ReferenceOutputAssembly="false" />
+
+    <ProjectReference Include="..\..\src\Conjure.EFX\Conjure.EFX.csproj"
+        OutputItemType="Analyzer"
+        ReferenceOutputAssembly="false" />
+
+    <ProjectReference Include="..\..\src\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
+    <ProjectReference Include="..\..\src\Conjure.EFX.SourceGenerator\Conjure.EFX.SourceGenerator.csproj"
+        OutputItemType="Analyzer"
+        ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

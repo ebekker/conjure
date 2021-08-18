@@ -15,6 +15,9 @@ namespace {{Entity.EntityNamespace}}
     public partial class {{$entityClass}}{{if Entity.EntityBaseClass}}
         : {{Entity.EntityBaseClass | to_safe_name}}{{end}}
     {
+        public static string GetEntityClass() => "{{$entityClass}}";
+        public static string GetTableName() => "{{Entity.TableName}}";
+
         {{~## GenerateConstructor(); ##~}}
         {{~if Options.Data.Entity.Document~}}
         /// <summary>

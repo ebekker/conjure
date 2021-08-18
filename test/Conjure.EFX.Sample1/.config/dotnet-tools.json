@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "conjure.efx.dotnettool": {
-      "version": "0.1.0",
+      "version": "0.1.2.10",
       "commands": [
         "efx"
       ]
