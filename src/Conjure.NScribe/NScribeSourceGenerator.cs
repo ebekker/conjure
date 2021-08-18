@@ -29,11 +29,6 @@ namespace Conjure.NScribe
 
         public void Execute(GeneratorExecutionContext context)
         {
-            // var x = context.AnalyzerConfigOptions;
-            // var y = context.AdditionalFiles;
-            // var z = context.Compilation;
-            // var a = context.ParseOptions;
-
             var configs = new List<string>();
             var configFiles = new Dictionary<string, List<string>>();
 

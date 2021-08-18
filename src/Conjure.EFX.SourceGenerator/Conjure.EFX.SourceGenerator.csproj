@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -17,6 +17,9 @@
     <ProjectReference Include="..\Conjure\Conjure.csproj" />
     <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
     <ProjectReference Include="..\Conjure.NScribe\Conjure.NScribe.csproj" />
+
+    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj"
+        PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,8 +44,16 @@
      - For reference:
      -    https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages
      -->
-    <!-- <PackageReference Include="Scriban" Version="4.0.1"
-         PrivateAssets="all" GeneratePathProperty="true" /> -->
+    <PackageReference Include="Scriban" Version="4.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <!-- <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.18"
+        PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.18"
+        PrivateAssets="all" GeneratePathProperty="true" /> -->
+
+    <!-- <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.18"
+        PrivateAssets="all" GeneratePathProperty="true" />    
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.18"
+        PrivateAssets="all" GeneratePathProperty="true" />     -->
   </ItemGroup>
 
   <PropertyGroup>
@@ -51,7 +62,31 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <!-- <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" /> -->
+      <TargetPathWithTargetPlatformMoniker
+          Include="$(PKGScriban)\lib\netstandard2.0\*.dll"
+          IncludeRuntimeDependency="false" />
+      <!-- <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGMicrosoft_Extensions_DependencyInjection)\lib\netstandard2.0\*.dll"
+        IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGMicrosoft_Extensions_DependencyInjection_Abstractions)\lib\netstandard2.0\*.dll"
+        IncludeRuntimeDependency="false" /> -->
+
+      <!-- <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGMicrosoft_Extensions_Logging)\lib\netstandard2.0\*.dll"
+        IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGMicrosoft_Extensions_Logging_Abstractions)\lib\netstandard2.0\*.dll"
+        IncludeRuntimeDependency="false" /> -->
+
+      <TargetPathWithTargetPlatformMoniker
+          Include="$(PKGConjure_PipeTalk)\lib\netstandard2.0\*.dll"
+          IncludeRuntimeDependency="false" />
+
+      <TargetPathWithTargetPlatformMoniker
+          Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll"
+          IncludeRuntimeDependency="false" />
+
     </ItemGroup>
   </Target>
 
