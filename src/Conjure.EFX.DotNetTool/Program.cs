@@ -12,7 +12,9 @@ namespace Conjure.EFX.DotNetTool
     [Subcommand(
         typeof(ListCommand),
         typeof(RefreshCommand),
-        typeof(PreviewCommand)
+        typeof(PreviewCommand),
+        typeof(PipeGenCommand),
+        typeof(PipeTestCommand)
     )]
     public class Program
     {

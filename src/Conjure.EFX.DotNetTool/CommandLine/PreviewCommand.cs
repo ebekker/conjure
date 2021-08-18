@@ -37,7 +37,7 @@ namespace Conjure.EFX.DotNetTool.CommandLine
             Console.WriteLine("Got Options: " + options);
 
             var model = _cacheBuilder.LoadFromCache(options);
-            _codeGenerator.Generate(options, model);
+            _codeGenerator.Generate(options, model, File.WriteAllText);
         }
     }
 }

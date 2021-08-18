@@ -31,7 +31,7 @@ namespace Conjure.EFX.Impl
 
         public ProfileOptions Options { get; set; }
 
-        public void Generate(ProfileOptions options, DatabaseModel databaseModel)
+        public void Generate(ProfileOptions options, DatabaseModel databaseModel, CodeGeneratorWriter writer)
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
 
@@ -43,12 +43,14 @@ namespace Conjure.EFX.Impl
 
             var topTemplatesPath = Path.GetFullPath(Path.Combine(Options.Options.ProfilePath, "templates"));
             _topTemplates = Directory.GetFiles(topTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+
             var childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities"));
             _entityTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+
             childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities/models"));
             _entityModelTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
 
-            GenerateFiles(context);
+            GenerateFiles(context, writer);
         }
 
         public class EFXGeneratorContext
@@ -59,7 +61,7 @@ namespace Conjure.EFX.Impl
             public Model EntityModel { get; set; }
         }
 
-        private void GenerateFiles(EntityContext entityContext)
+        private void GenerateFiles(EntityContext entityContext, CodeGeneratorWriter writer)
         {
             Entity targetEntity = null;
 
@@ -81,7 +83,7 @@ namespace Conjure.EFX.Impl
 
             foreach (var templatePath in _topTemplates)
             {
-                GenerateTemplateFile(entityContext, templatePath, templateContext);
+                GenerateTemplateFile(writer, entityContext, templatePath, templateContext);
             }
 
             if (_entityTemplates.Length > 0)
@@ -93,7 +95,7 @@ namespace Conjure.EFX.Impl
 
                     foreach (var templatePath in _entityTemplates)
                     {
-                        GenerateTemplateFile(entityContext, templatePath, templateContext, "entities");
+                        GenerateTemplateFile(writer, entityContext, templatePath, templateContext, "entities");
 
                         if (_entityModelTemplates.Length > 0 && entity.Models.Count > 0)
                         {
@@ -104,7 +106,7 @@ namespace Conjure.EFX.Impl
 
                                 foreach (var modelTemplatePath in _entityModelTemplates)
                                 {
-                                    GenerateTemplateFile(entityContext, templatePath, templateContext, "entities/models");
+                                    GenerateTemplateFile(writer, entityContext, templatePath, templateContext, "entities/models");
                                 }
 
                                 genContext.EntityModel = null;
@@ -129,7 +131,7 @@ namespace Conjure.EFX.Impl
             // GenerateScriptTemplates(entityContext);
         }
 
-        private void GenerateTemplateFile(EntityContext entityContext,
+        private void GenerateTemplateFile(CodeGeneratorWriter writer, EntityContext entityContext,
             string templatePath, TemplateContext templateContext, string outputPrefix = null)
         {
             var templateName = Path.GetFileNameWithoutExtension(templatePath);
@@ -144,326 +146,326 @@ namespace Conjure.EFX.Impl
             var content = File.ReadAllText(templatePath);
             var template = Template.Parse(content);
             var output = template.Render(templateContext);
-            File.WriteAllText(outputPath, output);
+            writer(outputPath, output);
         }
 
-        private void GenerateDataContext(EntityContext entityContext)
-        {
-
-            var directory = Options.Data.Context.Directory;
-            var file = entityContext.ContextClass + ".cs";
-            var path = Path.Combine(directory, file);
-
-            _logger.LogInformation(File.Exists(path)
-                ? "Updating data context class: {file}"
-                : "Creating data context class: {file}", file);
-
-            // var template = new DataContextTemplate(entityContext, Options);
-            // template.WriteCode(path);
-        }
+        // private void GenerateDataContext(EntityContext entityContext)
+        // {
+
+        //     var directory = Options.Data.Context.Directory;
+        //     var file = entityContext.ContextClass + ".cs";
+        //     var path = Path.Combine(directory, file);
+
+        //     _logger.LogInformation(File.Exists(path)
+        //         ? "Updating data context class: {file}"
+        //         : "Creating data context class: {file}", file);
+
+        //     // var template = new DataContextTemplate(entityContext, Options);
+        //     // template.WriteCode(path);
+        // }
 
-        private void GenerateEntityClasses(EntityContext entityContext)
-        {
-            foreach (var entity in entityContext.Entities)
-            {
-                Options.Variables.Set(entity);
+        // private void GenerateEntityClasses(EntityContext entityContext)
+        // {
+        //     foreach (var entity in entityContext.Entities)
+        //     {
+        //         Options.Variables.Set(entity);
 
-                var directory = Options.Data.Entity.Directory;
-                var file = entity.EntityClass + ".cs";
-                var path = Path.Combine(directory, file);
+        //         var directory = Options.Data.Entity.Directory;
+        //         var file = entity.EntityClass + ".cs";
+        //         var path = Path.Combine(directory, file);
 
-                _logger.LogInformation(File.Exists(path)
-                    ? "Updating entity class: {file}"
-                    : "Creating entity class: {file}", file);
+        //         _logger.LogInformation(File.Exists(path)
+        //             ? "Updating entity class: {file}"
+        //             : "Creating entity class: {file}", file);
 
-                // var template = new EntityClassTemplate(entity, Options);
-                // template.WriteCode(path);
+        //         // var template = new EntityClassTemplate(entity, Options);
+        //         // template.WriteCode(path);
 
-                Options.Variables.Remove(entity);
-            }
-        }
-
-        private void GenerateMappingClasses(EntityContext entityContext)
-        {
-            foreach (var entity in entityContext.Entities)
-            {
-                Options.Variables.Set(entity);
-
-                var directory = Options.Data.Mapping.Directory;
-                var file = entity.MappingClass + ".cs";
-                var path = Path.Combine(directory, file);
-
-                _logger.LogInformation(File.Exists(path)
-                    ? "Updating mapping class: {file}"
-                    : "Creating mapping class: {file}", file);
-
-                // var template = new MappingClassTemplate(entity, Options);
-                // template.WriteCode(path);
+        //         Options.Variables.Remove(entity);
+        //     }
+        // }
+
+        // private void GenerateMappingClasses(EntityContext entityContext)
+        // {
+        //     foreach (var entity in entityContext.Entities)
+        //     {
+        //         Options.Variables.Set(entity);
+
+        //         var directory = Options.Data.Mapping.Directory;
+        //         var file = entity.MappingClass + ".cs";
+        //         var path = Path.Combine(directory, file);
+
+        //         _logger.LogInformation(File.Exists(path)
+        //             ? "Updating mapping class: {file}"
+        //             : "Creating mapping class: {file}", file);
+
+        //         // var template = new MappingClassTemplate(entity, Options);
+        //         // template.WriteCode(path);
 
-                Options.Variables.Remove(entity);
-            }
-        }
+        //         Options.Variables.Remove(entity);
+        //     }
+        // }
 
-        private void GenerateQueryExtensions(EntityContext entityContext)
-        {
-            foreach (var entity in entityContext.Entities)
-            {
-                Options.Variables.Set(entity);
+        // private void GenerateQueryExtensions(EntityContext entityContext)
+        // {
+        //     foreach (var entity in entityContext.Entities)
+        //     {
+        //         Options.Variables.Set(entity);
 
-                var directory = Options.Data.Query.Directory;
-                var file = entity.EntityClass + "Extensions.cs";
-                var path = Path.Combine(directory, file);
+        //         var directory = Options.Data.Query.Directory;
+        //         var file = entity.EntityClass + "Extensions.cs";
+        //         var path = Path.Combine(directory, file);
 
-                _logger.LogInformation(File.Exists(path)
-                    ? "Updating query extensions class: {file}"
-                    : "Creating query extensions class: {file}", file);
+        //         _logger.LogInformation(File.Exists(path)
+        //             ? "Updating query extensions class: {file}"
+        //             : "Creating query extensions class: {file}", file);
 
-                // var template = new QueryExtensionTemplate(entity, Options);
-                // template.WriteCode(path);
+        //         // var template = new QueryExtensionTemplate(entity, Options);
+        //         // template.WriteCode(path);
 
-                Options.Variables.Remove(entity);
-            }
-        }
+        //         Options.Variables.Remove(entity);
+        //     }
+        // }
 
-        private void GenerateModelClasses(EntityContext entityContext)
-        {
-            foreach (var entity in entityContext.Entities)
-            {
-                if (entity.Models.Count <= 0)
-                    continue;
+        // private void GenerateModelClasses(EntityContext entityContext)
+        // {
+        //     foreach (var entity in entityContext.Entities)
+        //     {
+        //         if (entity.Models.Count <= 0)
+        //             continue;
 
-                Options.Variables.Set(entity);
+        //         Options.Variables.Set(entity);
 
-                GenerateModelClasses(entity);
-                GenerateValidatorClasses(entity);
-                GenerateMapperClass(entity);
+        //         GenerateModelClasses(entity);
+        //         GenerateValidatorClasses(entity);
+        //         GenerateMapperClass(entity);
 
-                Options.Variables.Remove(entity);
-            }
-        }
+        //         Options.Variables.Remove(entity);
+        //     }
+        // }
 
 
-        private void GenerateModelClasses(Entity entity)
-        {
-            foreach (var model in entity.Models)
-            {
-                Options.Variables.Set(model);
+        // private void GenerateModelClasses(Entity entity)
+        // {
+        //     foreach (var model in entity.Models)
+        //     {
+        //         Options.Variables.Set(model);
 
-                var directory = GetModelDirectory(model);
-                var file = model.ModelClass + ".cs";
-                var path = Path.Combine(directory, file);
+        //         var directory = GetModelDirectory(model);
+        //         var file = model.ModelClass + ".cs";
+        //         var path = Path.Combine(directory, file);
 
-                _logger.LogInformation(File.Exists(path)
-                    ? "Updating model class: {file}"
-                    : "Creating model class: {file}", file);
+        //         _logger.LogInformation(File.Exists(path)
+        //             ? "Updating model class: {file}"
+        //             : "Creating model class: {file}", file);
 
 
-                // var template = new ModelClassTemplate(model, Options);
-                // template.WriteCode(path);
+        //         // var template = new ModelClassTemplate(model, Options);
+        //         // template.WriteCode(path);
 
-                Options.Variables.Remove(model);
-            }
+        //         Options.Variables.Remove(model);
+        //     }
 
-        }
+        // }
 
-        private string GetModelDirectory(Model model)
-        {
-            if (model.ModelType == ModelType.Create)
-                return !string.IsNullOrEmpty(Options.Model.Create.Directory)
-                    ? Options.Model.Create.Directory
-                    : Options.Model.Shared.Directory;
+        // private string GetModelDirectory(Model model)
+        // {
+        //     if (model.ModelType == ModelType.Create)
+        //         return !string.IsNullOrEmpty(Options.Model.Create.Directory)
+        //             ? Options.Model.Create.Directory
+        //             : Options.Model.Shared.Directory;
 
-            if (model.ModelType == ModelType.Update)
-                return !string.IsNullOrEmpty(Options.Model.Update.Directory)
-                    ? Options.Model.Update.Directory
-                    : Options.Model.Shared.Directory;
+        //     if (model.ModelType == ModelType.Update)
+        //         return !string.IsNullOrEmpty(Options.Model.Update.Directory)
+        //             ? Options.Model.Update.Directory
+        //             : Options.Model.Shared.Directory;
 
-            return !string.IsNullOrEmpty(Options.Model.Read.Directory)
-                ? Options.Model.Read.Directory
-                : Options.Model.Shared.Directory;
-        }
+        //     return !string.IsNullOrEmpty(Options.Model.Read.Directory)
+        //         ? Options.Model.Read.Directory
+        //         : Options.Model.Shared.Directory;
+        // }
 
 
-        private void GenerateValidatorClasses(Entity entity)
-        {
-            if (!Options.Model.Validator.Generate)
-                return;
-
-            foreach (var model in entity.Models)
-            {
-                Options.Variables.Set(model);
-
-                // don't validate read models
-                if (model.ModelType == ModelType.Read)
-                    continue;
+        // private void GenerateValidatorClasses(Entity entity)
+        // {
+        //     if (!Options.Model.Validator.Generate)
+        //         return;
+
+        //     foreach (var model in entity.Models)
+        //     {
+        //         Options.Variables.Set(model);
+
+        //         // don't validate read models
+        //         if (model.ModelType == ModelType.Read)
+        //             continue;
 
-                var directory = Options.Model.Validator.Directory;
-                var file = model.ValidatorClass + ".cs";
-                var path = Path.Combine(directory, file);
-
-                _logger.LogInformation(File.Exists(path)
-                    ? "Updating validation class: {file}"
-                    : "Creating validation class: {file}", file);
-
-                // var template = new ValidatorClassTemplate(model, Options);
-                // template.WriteCode(path);
-
-                Options.Variables.Remove(model);
-            }
-        }
-
-
-        private void GenerateMapperClass(Entity entity)
-        {
-            if (!Options.Model.Mapper.Generate)
-                return;
-
-            var directory = Options.Model.Mapper.Directory;
-            var file = entity.MapperClass + ".cs";
-            var path = Path.Combine(directory, file);
-
-            _logger.LogInformation(File.Exists(path)
-                ? "Updating object mapper class: {file}"
-                : "Creating object mapper class: {file}", file);
-
-            // var template = new MapperClassTemplate(entity, Options);
-            // template.WriteCode(path);
-        }
-
-
-        private void GenerateScriptTemplates(EntityContext entityContext)
-        {
-            GenerateContextScriptTemplates(entityContext);
-            GenerateEntityScriptTemplates(entityContext);
-            GenerateModelScriptTemplates(entityContext);
-        }
-
-        private void GenerateModelScriptTemplates(EntityContext entityContext)
-        {
-            if (Options?.Script?.Model == null || Options.Script.Model.Count == 0)
-                return;
-
-            foreach (var templateOption in Options.Script.Model)
-            {
-                if (!VerifyScriptTemplate(templateOption))
-                    continue;
-
-                try
-                {
-                    // var template = new ModelScriptTemplate(_loggerFactory, Options, templateOption);
-
-                    // foreach (var entity in entityContext.Entities)
-                    // {
-                    //     Options.Variables.Set(entity);
-
-                    //     foreach (var model in entity.Models)
-                    //     {
-                    //         Options.Variables.Set(model);
-
-                    //         template.RunScript(model);
-
-                    //         Options.Variables.Remove(model);
-                    //     }
-
-                    //     Options.Variables.Remove(entity);
-                    // }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error Running Model Template: {message}", ex.Message);
-                }
-            }
-        }
-
-        private void GenerateEntityScriptTemplates(EntityContext entityContext)
-        {
-            if (Options?.Script?.Entity == null || Options.Script.Entity.Count == 0)
-                return;
-
-            foreach (var templateOption in Options.Script.Entity)
-            {
-                if (!VerifyScriptTemplate(templateOption))
-                    continue;
-
-                try
-                {
-                    // var template = new EntityScriptTemplate(_loggerFactory, Options, templateOption);
-
-                    // foreach (var entity in entityContext.Entities)
-                    // {
-                    //     Options.Variables.Set(entity);
-
-                    //     template.RunScript(entity);
-
-                    //     Options.Variables.Remove(entity);
-                    // }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error Running Entity Template: {message}", ex.Message);
-                }
-            }
-        }
-
-        private void GenerateContextScriptTemplates(EntityContext entityContext)
-        {
-            if (Options?.Script?.Context == null || Options.Script.Context.Count !< 0)
-                return;
-
-            foreach (var templateOption in Options.Script.Context)
-            {
-                if (!VerifyScriptTemplate(templateOption))
-                    continue;
-
-                try
-                {
-                    // var template = new ContextScriptTemplate(_loggerFactory, Options, templateOption);
-                    // template.RunScript(entityContext);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error Running Context Template: {message}", ex.Message);
-                }
-            }
-        }
-
-        private bool VerifyScriptTemplate(TemplateOptions templateOption)
-        {
-            var templatePath = templateOption.TemplatePath;
-
-            if (File.Exists(templatePath))
-                return true;
-
-            _logger.LogWarning("Template '{template}' could not be found.", templatePath);
-            return false;
-        }
-
-
-        private DatabaseModel GetDatabaseModel(IDatabaseModelFactory factory)
-        {
-            _logger.LogInformation("Loading database model ...");
-
-            var database = Options.Database;
-            var connectionString = ResolveConnectionString(database);
-            var options = new DatabaseModelFactoryOptions(database.Tables, database.Schemas);
-
-            return factory.Create(connectionString, options);
-        }
-
-        private string ResolveConnectionString(DatabaseOptions database)
-        {
-            if (!string.IsNullOrEmpty(database.ConnectionString))
-                return database.ConnectionString;
-
-            if (!string.IsNullOrEmpty(database.UserSecretsId))
-            {
-                var secretsStore = new SecretsStore(database.UserSecretsId);
-                if (secretsStore.ContainsKey(database.ConnectionName))
-                    return secretsStore[database.ConnectionName];
-            }
-
-            throw new InvalidOperationException("Could not find connection string.");
-        }
+        //         var directory = Options.Model.Validator.Directory;
+        //         var file = model.ValidatorClass + ".cs";
+        //         var path = Path.Combine(directory, file);
+
+        //         _logger.LogInformation(File.Exists(path)
+        //             ? "Updating validation class: {file}"
+        //             : "Creating validation class: {file}", file);
+
+        //         // var template = new ValidatorClassTemplate(model, Options);
+        //         // template.WriteCode(path);
+
+        //         Options.Variables.Remove(model);
+        //     }
+        // }
+
+
+        // private void GenerateMapperClass(Entity entity)
+        // {
+        //     if (!Options.Model.Mapper.Generate)
+        //         return;
+
+        //     var directory = Options.Model.Mapper.Directory;
+        //     var file = entity.MapperClass + ".cs";
+        //     var path = Path.Combine(directory, file);
+
+        //     _logger.LogInformation(File.Exists(path)
+        //         ? "Updating object mapper class: {file}"
+        //         : "Creating object mapper class: {file}", file);
+
+        //     // var template = new MapperClassTemplate(entity, Options);
+        //     // template.WriteCode(path);
+        // }
+
+
+        // private void GenerateScriptTemplates(EntityContext entityContext)
+        // {
+        //     GenerateContextScriptTemplates(entityContext);
+        //     GenerateEntityScriptTemplates(entityContext);
+        //     GenerateModelScriptTemplates(entityContext);
+        // }
+
+        // private void GenerateModelScriptTemplates(EntityContext entityContext)
+        // {
+        //     if (Options?.Script?.Model == null || Options.Script.Model.Count == 0)
+        //         return;
+
+        //     foreach (var templateOption in Options.Script.Model)
+        //     {
+        //         if (!VerifyScriptTemplate(templateOption))
+        //             continue;
+
+        //         try
+        //         {
+        //             // var template = new ModelScriptTemplate(_loggerFactory, Options, templateOption);
+
+        //             // foreach (var entity in entityContext.Entities)
+        //             // {
+        //             //     Options.Variables.Set(entity);
+
+        //             //     foreach (var model in entity.Models)
+        //             //     {
+        //             //         Options.Variables.Set(model);
+
+        //             //         template.RunScript(model);
+
+        //             //         Options.Variables.Remove(model);
+        //             //     }
+
+        //             //     Options.Variables.Remove(entity);
+        //             // }
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             _logger.LogError(ex, "Error Running Model Template: {message}", ex.Message);
+        //         }
+        //     }
+        // }
+
+        // private void GenerateEntityScriptTemplates(EntityContext entityContext)
+        // {
+        //     if (Options?.Script?.Entity == null || Options.Script.Entity.Count == 0)
+        //         return;
+
+        //     foreach (var templateOption in Options.Script.Entity)
+        //     {
+        //         if (!VerifyScriptTemplate(templateOption))
+        //             continue;
+
+        //         try
+        //         {
+        //             // var template = new EntityScriptTemplate(_loggerFactory, Options, templateOption);
+
+        //             // foreach (var entity in entityContext.Entities)
+        //             // {
+        //             //     Options.Variables.Set(entity);
+
+        //             //     template.RunScript(entity);
+
+        //             //     Options.Variables.Remove(entity);
+        //             // }
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             _logger.LogError(ex, "Error Running Entity Template: {message}", ex.Message);
+        //         }
+        //     }
+        // }
+
+        // private void GenerateContextScriptTemplates(EntityContext entityContext)
+        // {
+        //     if (Options?.Script?.Context == null || Options.Script.Context.Count !< 0)
+        //         return;
+
+        //     foreach (var templateOption in Options.Script.Context)
+        //     {
+        //         if (!VerifyScriptTemplate(templateOption))
+        //             continue;
+
+        //         try
+        //         {
+        //             // var template = new ContextScriptTemplate(_loggerFactory, Options, templateOption);
+        //             // template.RunScript(entityContext);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             _logger.LogError(ex, "Error Running Context Template: {message}", ex.Message);
+        //         }
+        //     }
+        // }
+
+        // private bool VerifyScriptTemplate(TemplateOptions templateOption)
+        // {
+        //     var templatePath = templateOption.TemplatePath;
+
+        //     if (File.Exists(templatePath))
+        //         return true;
+
+        //     _logger.LogWarning("Template '{template}' could not be found.", templatePath);
+        //     return false;
+        // }
+
+
+        // private DatabaseModel GetDatabaseModel(IDatabaseModelFactory factory)
+        // {
+        //     _logger.LogInformation("Loading database model ...");
+
+        //     var database = Options.Database;
+        //     var connectionString = ResolveConnectionString(database);
+        //     var options = new DatabaseModelFactoryOptions(database.Tables, database.Schemas);
+
+        //     return factory.Create(connectionString, options);
+        // }
+
+        // private string ResolveConnectionString(DatabaseOptions database)
+        // {
+        //     if (!string.IsNullOrEmpty(database.ConnectionString))
+        //         return database.ConnectionString;
+
+        //     if (!string.IsNullOrEmpty(database.UserSecretsId))
+        //     {
+        //         var secretsStore = new SecretsStore(database.UserSecretsId);
+        //         if (secretsStore.ContainsKey(database.ConnectionName))
+        //             return secretsStore[database.ConnectionName];
+        //     }
+
+        //     throw new InvalidOperationException("Could not find connection string.");
+        // }
 
 
         private (IDatabaseModelFactory factory, IRelationalTypeMappingSource mapping) GetDatabaseProviders()

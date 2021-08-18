@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10.0</LangVersion>
-    <Version>0.1.0</Version>
+    <Version>0.1.2.10</Version>
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>efx</ToolCommandName>
@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Conjure\Conjure.csproj" />
     <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
+    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
