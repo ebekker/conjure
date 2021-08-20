@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX.Options
+﻿namespace Conjure.EFX.Options
 {
     /// <summary>
     /// Base class for the Model generation

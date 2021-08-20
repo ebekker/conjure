@@ -2,24 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
-    <Version>0.1.0</Version>
-  </PropertyGroup>
+    <Version>0.1.2.3</Version>
 
-  <!--
-  <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild> <!- - Generates a package at build - ->
-    <IncludeBuildOutput>false</IncludeBuildOutput> <!- - Do not include the generator as a lib dependency - ->
+    <LangVersion>PREVIEW</LangVersion>
+
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ebekker/conjure</PackageProjectUrl>
+    <Authors>https://github.com/ebekker/conjure/graphs/contributors</Authors>
+    <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
-  -->
 
   <ItemGroup>
-    <ProjectReference Include="..\Conjure\Conjure.csproj" />
-    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
-    <ProjectReference Include="..\Conjure.NScribe\Conjure.NScribe.csproj" />
-
-    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj"
-        PrivateAssets="all" GeneratePathProperty="true" />
+    <ProjectReference Include="..\Conjure\Conjure.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Conjure.NScribe\Conjure.NScribe.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +27,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Generates a package at build -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- Do not include the generator as a lib dependency -->
+  </PropertyGroup>
 
   <!--
    - Unfortuantely, to take on any private source-gen-time dependency,
@@ -45,15 +50,22 @@
      -    https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages
      -->
     <PackageReference Include="Scriban" Version="4.0.1" PrivateAssets="all" GeneratePathProperty="true" />
-    <!-- <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.18"
-        PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.18"
-        PrivateAssets="all" GeneratePathProperty="true" /> -->
 
-    <!-- <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.18"
-        PrivateAssets="all" GeneratePathProperty="true" />    
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.18"
-        PrivateAssets="all" GeneratePathProperty="true" />     -->
+    <!-- Package the generator and any local project refs in the analyzer directory of the nuget package -->
+    <!--
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    -->
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <!-- Package the Scriban dependency alongside the generator assembly -->
+    <None Include="$(PKGScriban)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    
+    <!-- Package the Conjure PipeTalk dependency alongside the generator assembly -->
+    <!--
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    -->
   </ItemGroup>
 
   <PropertyGroup>
@@ -62,31 +74,8 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker
-          Include="$(PKGScriban)\lib\netstandard2.0\*.dll"
-          IncludeRuntimeDependency="false" />
-      <!-- <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMicrosoft_Extensions_DependencyInjection)\lib\netstandard2.0\*.dll"
-        IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMicrosoft_Extensions_DependencyInjection_Abstractions)\lib\netstandard2.0\*.dll"
-        IncludeRuntimeDependency="false" /> -->
-
-      <!-- <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMicrosoft_Extensions_Logging)\lib\netstandard2.0\*.dll"
-        IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMicrosoft_Extensions_Logging_Abstractions)\lib\netstandard2.0\*.dll"
-        IncludeRuntimeDependency="false" /> -->
-
-      <TargetPathWithTargetPlatformMoniker
-          Include="$(PKGConjure_PipeTalk)\lib\netstandard2.0\*.dll"
-          IncludeRuntimeDependency="false" />
-
-      <TargetPathWithTargetPlatformMoniker
-          Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll"
-          IncludeRuntimeDependency="false" />
-
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(MSBuildProjectDirectory)\$(OutputPath)Conjure.PipeTalk.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

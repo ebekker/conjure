@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX
+﻿namespace Conjure.EFX
 {
     /// <summary>
     /// Table naming hint for how database tables are named.

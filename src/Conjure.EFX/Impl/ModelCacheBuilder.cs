@@ -1,4 +1,3 @@
-using System.Linq;
 using Conjure.EFX.ModelCache;
 using Conjure.EFX.Options;
 using Microsoft.EntityFrameworkCore.Design;

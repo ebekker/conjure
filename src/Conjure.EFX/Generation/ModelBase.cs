@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX.Generation
+﻿namespace Conjure.EFX.Generation
 {
 
     /// <summary>

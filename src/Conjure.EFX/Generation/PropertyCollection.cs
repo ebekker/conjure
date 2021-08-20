@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Conjure.EFX.Generation
+﻿namespace Conjure.EFX.Generation
 {
     /// <summary>
     /// A collection of <see cref="Property"/> instances

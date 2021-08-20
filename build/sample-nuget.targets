@@ -1,0 +1,20 @@
+<Project>
+
+    <!--
+      - (1) save this file under your project root, e.g. _ignore/nuget.targets
+      - (2) replace all the @@ tokens below
+      - (3) import this file in your project's main .csproj,
+      -      e.g. <Import Project="_ignore/nuget.targets" Condition="Exists('_ignore/nuget.targets')" />
+      - (4) invoke to push latest nupkg, e.g. dotnet msbuild -target:PushToMyGet
+      -->
+
+    <Target Name="PushToMyGet">
+        <PropertyGroup>
+            <MyGetFeedUrl>@@PACKAGE-FEED-URL@@</MyGetFeedUrl>
+            <MyGetApiKey>@@PACKAGE-FEED-API-KEY@@</MyGetApiKey>
+        </PropertyGroup>
+
+        <Exec Command='"dotnet" nuget push "nupkg/@@PACKAGE-ID@@.$(Version).nupkg" --source "$(MyGetFeedUrl)" --api-key "$(MyGetApiKey)"' />
+    </Target>
+
+</Project>

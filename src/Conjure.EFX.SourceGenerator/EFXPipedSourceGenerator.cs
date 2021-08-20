@@ -20,10 +20,27 @@ namespace Conjure.EFX.SourceGenerator
         {
             var pipeName = Guid.NewGuid().ToString();
 
-            Process.Start("dotnet", $"tool run efx -- pipe-gen --pipe-name {pipeName}");
+            context.ReportDiagnostic(Diagnostic.Create("EFX-0", "EFX",
+                $"Starting EFX Pipe Generator Server...",
+                DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+
+            var proc = Process.Start("dotnet", $"tool run efx -- pipe-gen --pipe-name {pipeName}");
+
+            context.ReportDiagnostic(Diagnostic.Create("EFX-0", "EFX",
+                $"...STARTED: {pipeName} - {proc.Id}",
+                DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
 
             using var client = OutProcGenProtocol.CreateClient(pipeName);
+
+            context.ReportDiagnostic(Diagnostic.Create("EFX-0", "EFX",
+                "Connecting to EFX Pipe Generator Server...",
+                DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
             client.Connect();
+            context.ReportDiagnostic(Diagnostic.Create("EFX-0", "EFX",
+                "...CONNECTED",
+                DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+
+            int sources = 0;
             client.BeginSession();
             client.ReadProfiles((profile, path, content) =>
             {
@@ -32,7 +49,13 @@ namespace Conjure.EFX.SourceGenerator
                     .Replace("/", "__")
                     .Replace(":", "__");
                 context.AddSource(name, content);
+                sources++;
             });
+
+            context.ReportDiagnostic(Diagnostic.Create("EFX-0", "EFX",
+                $"Added source files: [{sources}]",
+                DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
+
         }
     }
 }

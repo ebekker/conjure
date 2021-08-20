@@ -1,4 +1,3 @@
-using System.Linq;
 using Conjure.EFX.Impl;
 
 namespace Conjure.EFX.Generation

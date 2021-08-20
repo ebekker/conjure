@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Conjure.EFX.Options

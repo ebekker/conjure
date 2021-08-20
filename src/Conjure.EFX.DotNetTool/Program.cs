@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Conjure.EFX.DotNetTool.CommandLine;
+﻿using Conjure.EFX.DotNetTool.CommandLine;
 using Conjure.EFX.Impl;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;

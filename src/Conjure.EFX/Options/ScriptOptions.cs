@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Conjure.EFX.Options
+﻿namespace Conjure.EFX.Options
 {
     public class ScriptOptions : BaseOptions
     {

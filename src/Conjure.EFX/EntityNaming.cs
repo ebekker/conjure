@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX
+﻿namespace Conjure.EFX
 {
     /// <summary>
     /// Entity class naming strategy

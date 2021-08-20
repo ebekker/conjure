@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX
+﻿namespace Conjure.EFX
 {
     /// <summary>
     /// The database to generate code for.

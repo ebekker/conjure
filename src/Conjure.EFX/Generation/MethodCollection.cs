@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Conjure.EFX.Generation
+﻿namespace Conjure.EFX.Generation
 {
     /// <summary>
     /// A collection of <see cref="Method"/> instances

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conjure.EFX.Options
+﻿namespace Conjure.EFX.Options
 {
     /// <summary>
     /// EntityFramework mapping class generation options

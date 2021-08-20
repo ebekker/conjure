@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Conjure.EFX.Options
+﻿namespace Conjure.EFX.Options
 {
     /// <summary>
     /// Selection options
