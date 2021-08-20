@@ -13,6 +13,9 @@ namespace Conjure.PipeTalk
         public const string VersTag = "VERS";
         public const string Version = "0.1.0";
 
+        public const string ErrorTag = "ERROR";
+        public const string ErrorBodyTag = "ERRBODY";
+
         public const string ProfileTag = "PROFILE";
         public const string FileTag = "FILE";
         public const string BodyTag = "BODY";
@@ -68,7 +71,7 @@ namespace Conjure.PipeTalk
             _endSession = endSession;
         }
 
-        public void ReadProfiles(Action<string, string, string> handler)
+        public void ReadProfiles(Action<string, string, string> handler, Action<string, string, string> error = null)
         {
             string profile = null;
             string path = null;
@@ -77,6 +80,28 @@ namespace Conjure.PipeTalk
             _client.Read(out var tag, out var args);
             while (tag != null && tag != OutProcGenProtocol.EndTag)
             {
+                if (tag == OutProcGenProtocol.ErrorBodyTag)
+                {
+                    var code = args[0];
+                    var mesg = args[1];
+                    var body = default(string);
+
+                    _client.Read(out tag, out args);
+                    if (tag == OutProcGenProtocol.ErrorBodyTag)
+                    {
+                        _client.DecodeB64(args, out body);
+                        _client.Read(out tag, out args);
+                    }
+
+                    if (error == null)
+                    {
+                        throw new Exception(mesg);
+                    }
+                    else
+                    {
+                        error(code, mesg, body);
+                    }
+                }
                 if (tag == OutProcGenProtocol.ProfileTag)
                 {
                     if (args.Count != 1)
@@ -136,6 +161,13 @@ namespace Conjure.PipeTalk
         public void WaitForConnection()
         {
             _server.WaitForConnection();
+        }
+
+        public void Fail(string code, string message, string body = null)
+        {
+            _server.Write(OutProcGenProtocol.ErrorTag, code, message);
+            if (body != null)
+                _server.WriteB64(OutProcGenProtocol.ErrorBodyTag, body);
         }
 
         public void BeginSession()

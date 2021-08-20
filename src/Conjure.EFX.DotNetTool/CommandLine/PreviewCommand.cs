@@ -1,4 +1,3 @@
-using System.Linq;
 using McMaster.Extensions.CommandLineUtils;
 
 namespace Conjure.EFX.DotNetTool.CommandLine
@@ -20,17 +19,19 @@ namespace Conjure.EFX.DotNetTool.CommandLine
         [Argument(0, Description = "name of the profile to for which to preview generated code")]
         public string Profile { get; set; }
 
-        public void OnExecute()
+        public int OnExecute()
         {
             if (Profile == null)
             {
-                throw new Exception("You must specify a profile name to preivew");
+                Console.Error.WriteLine("You must specify a profile name to preivew");
+                return -1;
             }
 
             var profile = GetProfiles().SingleOrDefault(x => x.Name == Profile);
             if (profile == null)
             {
-                throw new Exception($"Could not resolve profile] for name [{Profile}]");
+                Console.Error.WriteLine($"Could not resolve profile] for name [{Profile}]");
+                return -1;
             }
 
             var options = _serializer.Load(profile);
@@ -38,6 +39,7 @@ namespace Conjure.EFX.DotNetTool.CommandLine
 
             var model = _cacheBuilder.LoadFromCache(options);
             _codeGenerator.Generate(options, model, File.WriteAllText);
+            return 0;
         }
     }
 }

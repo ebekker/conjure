@@ -12,13 +12,16 @@ namespace Conjure.EFX.DotNetTool.CommandLine
         {
             var pipeName = Guid.NewGuid().ToString();
 
-            Console.WriteLine("Starting PipeGen Server");
+            Console.WriteLine("Starting PipeGen Server...");
             //Process.Start("dotnet", $"tool run efx -- pipe-gen --pipe-name {pipeName}");
-            Process.Start("dotnet", $"run -- pipe-gen --pipe-name {pipeName}");
+            Process.Start("dotnet", $"tool run efx -- pipe-gen --pipe-name {pipeName}");
             Console.WriteLine("STARTED");
 
             using var client = OutProcGenProtocol.CreateClient(pipeName);
+            Console.WriteLine("Connecting to Pipe...");
             client.Connect();
+            Console.WriteLine("CONNECTED");
+
             client.BeginSession();
             client.ReadProfiles((profile, path, content) =>
             {

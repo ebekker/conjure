@@ -128,6 +128,16 @@ namespace Conjure.PipeTalk
             data = Encoding.UTF8.GetString(Convert.FromBase64String(segs[1]));
         }
 
+        public void DecodeB64(List<string> args, out string data)
+        {
+            if (args.Count > 0)
+            {
+                data = Encoding.UTF8.GetString(Convert.FromBase64String(args[0]));
+            }
+
+            data = null;
+        }
+
         public virtual void Dispose()
         {
             _writer?.Dispose();

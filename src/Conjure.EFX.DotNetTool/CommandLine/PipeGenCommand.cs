@@ -29,34 +29,41 @@ namespace Conjure.EFX.DotNetTool.CommandLine
             server.WaitForConnection();
             server.BeginSession();
 
- //           server.StartProfile("all_profiles");
+            //           server.StartProfile("all_profiles");
 
- //           var buff = new StringBuilder();
- //           buff.AppendLine(@"
- //namespace Conjure.Gen
- //{
- //    public partial class Profiles
- //    {
- //");
- //           foreach (var profile in GetProfiles())
- //           {
- //               buff.AppendLine($"        // {profile.Name}");
- //               buff.AppendLine($"        public const string ProfilePath_{profile.Name} = \"{profile.ProfilePath.Replace("\\", "\\\\")}\";");
- //               buff.AppendLine($"        public const string OptionsPath_{profile.Name} = \"{profile.OptionsPath.Replace("\\", "\\\\")}\";");
- //           }
- //           buff.AppendLine(@"
- //    }
- //}
- //");
- //           server.AddFile("AllProfiles.cs", buff.ToString());
+            //           var buff = new StringBuilder();
+            //           buff.AppendLine(@"
+            //namespace Conjure.Gen
+            //{
+            //    public partial class Profiles
+            //    {
+            //");
+            //           foreach (var profile in GetProfiles())
+            //           {
+            //               buff.AppendLine($"        // {profile.Name}");
+            //               buff.AppendLine($"        public const string ProfilePath_{profile.Name} = \"{profile.ProfilePath.Replace("\\", "\\\\")}\";");
+            //               buff.AppendLine($"        public const string OptionsPath_{profile.Name} = \"{profile.OptionsPath.Replace("\\", "\\\\")}\";");
+            //           }
+            //           buff.AppendLine(@"
+            //    }
+            //}
+            //");
+            //           server.AddFile("AllProfiles.cs", buff.ToString());
 
-            foreach (var profile in GetProfiles())
+            try
             {
-                var options = _serializer.Load(profile);
-                var model = _cacheBuilder.LoadFromCache(options);
+                foreach (var profile in GetProfiles())
+                {
+                    var options = _serializer.Load(profile);
+                    var model = _cacheBuilder.LoadFromCache(options);
 
-                server.StartProfile(profile.Name);
-                _codeGenerator.Generate(options, model, server.AddFile);
+                    server.StartProfile(profile.Name);
+                    _codeGenerator.Generate(options, model, server.AddFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                server.Fail("???", ex.Message, ex.StackTrace);
             }
 
             server.EndSession();
