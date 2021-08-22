@@ -2,7 +2,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Conjure.Tests
+namespace Conjure.Options.Tests
 {
     public class VariableDictionaryTests
     {
