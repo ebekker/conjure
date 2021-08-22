@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
   </ItemGroup>
 
 </Project>
