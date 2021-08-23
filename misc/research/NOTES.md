@@ -31,6 +31,9 @@ PS> # dotnet add package Microsoft.EntityFrameworkCore.Tools
 
 To list all available files to be scaffolded:  `PS> dotnet aspnet-codegenerator identity -lf`
 
+Scaffolded:
+
+* dotnet aspnet-codegenerator identity -fi Account.Login
 
 ## `BlazorServerAuth`
 
