@@ -1,0 +1,86 @@
+﻿@page "/fetchdata"
+@inject IJSRuntime JS
+@inject ConjureInterop CI
+
+@using Conjure.Blazor.Sample1.Data
+@inject WeatherForecastService ForecastService
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+Calling JS Fetch back to our controller:
+    @jsFetch
+
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private string jsFetch = "(n/a)";
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            jsFetch = await HelloWorld();
+            StateHasChanged();
+        }
+    }
+
+    async Task<string> HelloWorld()
+    {
+        await using var fetchResponse = await JS.InvokeAsync<IJSObjectReference>(
+            "window.fetch", "api/sample/hello",
+            new
+            {
+                method = "GET",
+                //headers = new Dictionary<string, string>
+                //{
+                //    ["Content-type"] = "application/json",
+                //},
+            });
+
+        var result = new
+        {
+            ok = await CI.GetProperty<bool>(fetchResponse, "ok"),
+            status = await CI.GetProperty<int>(fetchResponse, "status"),
+            statusText = await CI.GetProperty<string>(fetchResponse, "statusText"),
+        };
+
+        return System.Text.Json.JsonSerializer.Serialize(result);
+    }
+}
