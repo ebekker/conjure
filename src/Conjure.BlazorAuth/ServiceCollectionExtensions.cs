@@ -1,4 +1,7 @@
-﻿using Conjure.BlazorAuth;
+﻿using Conjure.Blazor;
+using Conjure.BlazorAuth;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -6,7 +9,15 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBlazorAuth(this IServiceCollection services)
         {
-            services.AddScoped<ISignInClient, SignInClient>();
+            services.AddOptions();
+
+            services.AddHttpContextAccessor();
+
+            services.TryAdd(ServiceDescriptor.Singleton<IConfigureOptions<SignInConfig>>(
+                new ConfigureNamedOptions<SignInConfig>(SignInConfig.DefaultConfigName, config => { })));
+            
+            services.TryAdd(ServiceDescriptor.Scoped<ConjureInterop, ConjureInterop>());
+            services.TryAdd(ServiceDescriptor.Scoped<ISignInClient, SignInClient>());
 
             return services;
         }

@@ -7,8 +7,8 @@ namespace Conjure.BlazorAuth.Controllers
     {
         [ActionName("signin")]
         [AcceptVerbs(PostMethod)]
-        public async Task<ActionResult<SignInClient.SignInOutput>> DoSignIn(
-            [FromBody] SignInClient.SignInInput input)
+        public async Task<ActionResult<Models.SignInOutput>> DoSignIn(
+            [FromBody] Models.SignInInput input)
         {
             var user = new IdentityUser(input.UserName);
             var result = await _signInManager.PasswordSignInAsync(input.UserName, input.Password,

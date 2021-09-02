@@ -23,6 +23,40 @@ namespace Conjure.Blazor
             }
         }
 
+        public async ValueTask<string> Prompt(string message)
+        {
+            var module = await _moduleTask.Value;
+            return await module.InvokeAsync<string>("showPrompt", message);
+        }
+
+        public async ValueTask ConLog(string fmt, params object[] args)
+        {
+            if (args.Length > 0)
+                fmt = string.Format(fmt, args);
+            await _jSRuntime.InvokeVoidAsync("window.console.log", fmt);
+        }
+
+        public async ValueTask ConErr(string fmt, params object[] args)
+        {
+            if (args.Length > 0)
+                fmt = string.Format(fmt, args);
+            await _jSRuntime.InvokeVoidAsync("window.console.error", fmt);
+        }
+
+        public async ValueTask ConWarn(string fmt, params object[] args)
+        {
+            if (args.Length > 0)
+                fmt = string.Format(fmt, args);
+            await _jSRuntime.InvokeVoidAsync("window.console.warn", fmt);
+        }
+
+        public async ValueTask ConDebug(string fmt, params object[] args)
+        {
+            if (args.Length > 0)
+                fmt = string.Format(fmt, args);
+            await _jSRuntime.InvokeVoidAsync("window.console.debug", fmt);
+        }
+
         public async ValueTask CopyToClipboard(string text)
         {
             await _jSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
@@ -31,12 +65,6 @@ namespace Conjure.Blazor
         public async ValueTask<string> CopyFromClipboard()
         {
             return await _jSRuntime.InvokeAsync<string>("navigator.clipboard.readText");
-        }
-
-        public async ValueTask<string> Prompt(string message)
-        {
-            var module = await _moduleTask.Value;
-            return await module.InvokeAsync<string>("showPrompt", message);
         }
 
         public async ValueTask<TValue> GetProperty<TValue>(IJSObjectReference target, string property)

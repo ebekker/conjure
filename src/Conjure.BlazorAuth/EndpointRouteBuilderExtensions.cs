@@ -1,4 +1,5 @@
-﻿using Conjure.BlazorAuth.Controllers;
+﻿using Conjure.BlazorAuth;
+using Conjure.BlazorAuth.Controllers;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -6,7 +7,8 @@ namespace Microsoft.AspNetCore.Builder
     {
         public static void MapBlazorAuthController(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapControllerRoute($"__signinmanager", "api/account/{action}",
+            var pathPrefix = SignInClient.DefaultControllerPathPrefix;
+            endpoints.MapControllerRoute($"__signinmanager", $"{pathPrefix}/{{action}}",
                 defaults: new { controller = "SignIn" });
         }
     }
