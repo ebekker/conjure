@@ -1,0 +1,24 @@
+﻿@page "/signout"
+
+<h3>Sign Out</h3>
+
+@if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+{
+	<div>
+		You are currently Signed In.
+	</div>
+	<div>
+		Are you sure you want to Sign Out?
+	</div>
+	<div>
+		<button @onclick="DoSignOut">Yes</button>
+		<button @onclick="DoCancel">No</button>
+	</div>
+}
+else
+{
+	<div>
+		You are already Signed Out.
+	</div>
+}
+

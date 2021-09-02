@@ -1,0 +1,56 @@
+﻿@page "/whoami"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Who Am I</h3>
+
+@if (user == null)
+{
+    <div>User not resolve yet...</div>
+}
+else
+{
+    <div>
+        Primary Identity: @(Ser(user.Identity))
+    </div>
+    <div>
+        Claims Identities:
+        <ul>
+            @foreach (var id in user.Identities)
+            {
+                <li><pre>@(Ser(id))</pre></li>
+            }
+        </ul>
+    </div>
+    <div>
+        Claims:
+        <ul>
+            @foreach (var cl in user.Claims)
+            {
+                <li><pre>@(Ser(cl))</pre></li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    System.Security.Claims.ClaimsPrincipal? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+    }
+
+    JsonSerializerOptions jsonOpts = new JsonSerializerOptions()
+    {
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        WriteIndented = true,
+    };
+
+    string Ser<T>(T value)
+    {
+        return JsonSerializer.Serialize(value, jsonOpts);
+    }
+}

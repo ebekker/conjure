@@ -1,0 +1,97 @@
+﻿@page "/signin"
+
+<h3>Sign In</h3>
+
+<div class="row">
+<div class="col-md-6">
+
+@if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+{
+	<div>
+		You are already Signed In.
+	</div>
+}
+else
+{
+	<ul id="signInMethodTabs" class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link @(_showExternal ? "" : "active")" @onclick=ShowLocal>Local</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @(_showExternal ? "active" : "")" @onclick=ShowExternal>External</a>
+		</li>
+	</ul>
+	<div id="signInMethodContent" class="tab-content">
+		@if (!_showExternal)
+		{
+			<div class="row">
+				<div class="col-md-8">
+					<p>
+						Use a local account to sign in.
+					</p>
+					<hr />
+					<div class="form-group">
+						<label for="username">Username</label>
+						<input id="username" type="text" class="form-control" @bind=UserName />
+					</div>
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input id="password" type="password" class="form-control" @bind=Password />
+					</div>
+					<div class="form-group form-check">
+						<input id="rememberMe" type="checkbox" class="form-check-input" @bind=RememberMe disabled>
+						<label class="form-check-label" for="rememberMe">Remember me?</label>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary" @onclick="DoSignIn">Sign In</button>
+					</div>
+					<div class="form-group">
+						@_result
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>
+							<NavLink href="/ForgotPassword">Forgot your password?</NavLink>
+						</p>
+						<p>
+							<NavLink href="/Register">Register as a new user</NavLink>
+						</p>
+						<p>
+							<NavLink href="/ResendEmailConfirmation">Resend email confirmation</NavLink>
+						</p>
+					</div>
+				</div>
+			</div>
+		}
+		else
+		{
+			<p>
+				Use another service to sign in.
+			</p>
+			<hr />
+			<div class="form-group">
+				<div>
+					(External Auth Services Are Not Supported Yet)
+				</div>
+
+				<p>
+					There are no external authentication services configured.
+					See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+					about setting up this ASP.NET application to support logging in via external services</a>.
+				</p>
+			</div>
+		}
+	</div>
+}
+
+</div>
+</div>
+
+@code {
+	bool _showExternal;
+
+	void ShowLocal() => _showExternal = false;
+
+	void ShowExternal() => _showExternal = true;
+}

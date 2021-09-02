@@ -37,17 +37,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{DFC90F97-B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "research", "research", "{442517C6-B6D3-4644-AF79-75A4D3F45EBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServerAuth", "misc\research\BlazorServerAuth\BlazorServerAuth.csproj", "{B75E07D4-2514-4C43-95AA-5AE02F01325C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerAuth", "misc\research\BlazorServerAuth\BlazorServerAuth.csproj", "{B75E07D4-2514-4C43-95AA-5AE02F01325C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServer5Auth", "misc\research\BlazorServer5Auth\BlazorServer5Auth.csproj", "{8F000A76-16E5-4A22-B18D-C8D12272203C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer5Auth", "misc\research\BlazorServer5Auth\BlazorServer5Auth.csproj", "{8F000A76-16E5-4A22-B18D-C8D12272203C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conjure.Blazor", "src\Conjure.Blazor\Conjure.Blazor.csproj", "{57CD88E5-73DA-43D9-A155-6E47B81BA235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conjure.Blazor", "src\Conjure.Blazor\Conjure.Blazor.csproj", "{57CD88E5-73DA-43D9-A155-6E47B81BA235}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conjure.Blazor.Sample1", "docs\examples\Conjure.Blazor.Sample1\Conjure.Blazor.Sample1.csproj", "{16053315-D99B-4DA4-8B44-C853E66EC3B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conjure.Blazor.Sample1", "docs\examples\Conjure.Blazor.Sample1\Conjure.Blazor.Sample1.csproj", "{16053315-D99B-4DA4-8B44-C853E66EC3B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conjure.BlazorAuth", "src\Conjure.BlazorAuth\Conjure.BlazorAuth.csproj", "{10DD7E19-5075-4691-81C7-F9F8547CF7B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conjure.BlazorAuth", "src\Conjure.BlazorAuth\Conjure.BlazorAuth.csproj", "{10DD7E19-5075-4691-81C7-F9F8547CF7B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conjure.BlazorAuth.Sample1", "docs\examples\Conjure.BlazorAuth.Sample1\Conjure.BlazorAuth.Sample1.csproj", "{D4F2BB66-3883-45B7-913A-96C8DC34355A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conjure.BlazorAuth.Sample1", "docs\examples\Conjure.BlazorAuth.Sample1\Conjure.BlazorAuth.Sample1.csproj", "{D4F2BB66-3883-45B7-913A-96C8DC34355A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
