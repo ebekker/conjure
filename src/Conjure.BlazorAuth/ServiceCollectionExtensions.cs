@@ -9,13 +9,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBlazorAuth(this IServiceCollection services)
         {
-            services.AddOptions();
-
             services.AddHttpContextAccessor();
 
-            services.TryAdd(ServiceDescriptor.Singleton<IConfigureOptions<SignInConfig>>(
-                new ConfigureNamedOptions<SignInConfig>(SignInConfig.DefaultConfigName, config => { })));
-            
+            services.AddOptions<SignInConfig>()
+                .BindConfiguration(SignInConfig.DefaultConfigName);
+
             services.TryAdd(ServiceDescriptor.Scoped<ConjureInterop, ConjureInterop>());
             services.TryAdd(ServiceDescriptor.Scoped<ISignInClient, SignInClient>());
 
