@@ -1,0 +1,41 @@
+﻿<h3>Sign In With 2FA</h3>
+
+<div class="row">
+<div class="col-md-6">
+
+<div class="row">
+	<div class="col-md-8">
+		<p>
+			Use a local account to sign in.
+		</p>
+		<hr />
+		<EditForm Model=@_input OnValidSubmit=@DoSignIn>
+			<DataAnnotationsValidator />
+			<CustomValidator @ref=_customValidator />
+			<ValidationSummary Model=@_input />
+
+			@if (_user != null)
+			{
+				<div class="form-group">
+					<label for="username">Email</label>
+					<InputText id="username" type="text" class="form-control" @bind-Value=_input.TwoFactorCode autocomplete="off" />
+					<ValidationMessage For=@(() => _input.TwoFactorCode) />
+				</div>
+				<div class="form-group form-check">
+					<InputCheckbox id="rememberMe" class="form-check-input" @bind-Value=_input.RememberMachine />
+					<label class="form-check-label" for="rememberMe">Remember this machine?</label>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-primary" type="submit">Sign In</button>
+				</div>
+			}
+		</EditForm>
+	</div>
+</div>
+<p>
+    Don't have access to your authenticator device? You can
+    <a id="recovery-code-login" href="./LoginWithRecoveryCode?returnUrl=@ReturnUrl">log in with a recovery code</a>.
+</p>
+
+</div>
+</div>

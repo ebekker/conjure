@@ -1,15 +1,19 @@
-﻿@page "/signin"
-
-<h3>Sign In</h3>
+﻿<h3>Sign In</h3>
 
 <div class="row">
 <div class="col-md-6">
 
-@if (_authState?.User?.Identity?.IsAuthenticated ?? false)
+@if (_authState?.User?.Identity == null)
 {
-	<div>
+	<p>
+		Getting your authentication status...
+	</p>
+}
+else if (_authState.User.Identity.IsAuthenticated)
+{
+	<p>
 		You are already Signed In.
-	</div>
+	</p>
 }
 else
 {
@@ -30,35 +34,40 @@ else
 						Use a local account to sign in.
 					</p>
 					<hr />
-					<div class="form-group">
-						<label for="username">Username</label>
-						<input id="username" type="text" class="form-control" @bind=UserName />
-					</div>
-					<div class="form-group">
-						<label for="password">Password</label>
-						<input id="password" type="password" class="form-control" @bind=Password />
-					</div>
-					<div class="form-group form-check">
-						<input id="rememberMe" type="checkbox" class="form-check-input" @bind=RememberMe disabled>
-						<label class="form-check-label" for="rememberMe">Remember me?</label>
-					</div>
-					<div class="form-group">
-						<button class="btn btn-primary" @onclick="DoSignIn">Sign In</button>
-					</div>
-					<div class="form-group">
-						@_result
-					</div>
+					<EditForm Model=@_input OnValidSubmit=@DoSignIn>
+						<DataAnnotationsValidator />
+						<CustomValidator @ref=_customValidator />
+						<ValidationSummary Model=@_input />
+						<div class="form-group">
+							<label for="username">Username</label>
+							<InputText id="username" type="text" class="form-control" @bind-Value=_input.Email />
+							<ValidationMessage For=@(() => _input.Email) />
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<InputText id="password" type="password" class="form-control" @bind-Value=_input.Password />
+							<ValidationMessage For=@(() => _input.Password) />
+						</div>
+						<div class="form-group form-check">
+							<InputCheckbox id="rememberMe" class="form-check-input" @bind-Value=_input.RememberMe />
+							<label class="form-check-label" for="rememberMe">Remember me?</label>
+							<ValidationMessage For=@(() => _input.RememberMe) />
+						</div>
+						<div class="form-group">
+							<button class="btn btn-primary" type="submit">Sign In</button>
+						</div>
+					</EditForm>
 				</div>
 				<div class="col-md-4">
 					<div class="form-group">
 						<p>
-							<NavLink href="/ForgotPassword">Forgot your password?</NavLink>
+							<NavLink href="/Account/ForgotPassword">Forgot your password?</NavLink>
 						</p>
 						<p>
-							<NavLink href="/Register">Register as a new user</NavLink>
+							<NavLink href="/Account/Register">Register as a new user</NavLink>
 						</p>
 						<p>
-							<NavLink href="/ResendEmailConfirmation">Resend email confirmation</NavLink>
+							<NavLink href="/Account/ResendEmailConfirmation">Resend email confirmation</NavLink>
 						</p>
 					</div>
 				</div>

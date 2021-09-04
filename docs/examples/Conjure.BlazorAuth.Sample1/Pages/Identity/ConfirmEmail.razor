@@ -1,0 +1,31 @@
+﻿<h3>Confirm Email</h3>
+
+@if (_user == null)
+{
+	<p class="validation-message">
+		Unable to find user with ID <code>@UserId</code>.
+	</p>
+}
+else if (_result == null || !_result.Succeeded)
+{
+	<p class="validation-message">
+		Error confirming your email.
+		<ul>
+		@if (_result?.Errors != null)
+		{
+			@foreach (var im in _result.Errors)
+			{
+				<li>
+					@im.Description (@im.Code)
+				</li>
+			}
+		}
+		</ul>
+	</p>
+}
+else
+{
+	<p>
+		Thank you for confirming your email.
+	</p>
+}

@@ -1,24 +1,26 @@
-﻿@page "/signout"
-
-<h3>Sign Out</h3>
+﻿<h3>Sign Out</h3>
 
 @if (_authState?.User?.Identity?.IsAuthenticated ?? false)
 {
-	<div>
+	<p>
 		You are currently Signed In.
-	</div>
-	<div>
-		Are you sure you want to Sign Out?
-	</div>
-	<div>
-		<button @onclick="DoSignOut">Yes</button>
-		<button @onclick="DoCancel">No</button>
-	</div>
+	</p>
+	<EditForm Model=@this OnValidSubmit=@DoSignOut>
+		<CustomValidator @ref=_customValidator />
+		<ValidationSummary Model=@this />
+		<p>
+			Are you sure you want to Sign Out?
+		</p>
+		<div class="form-group">
+			<button class="btn btn-primary" type="submit">Sign Out</button>
+			<button class="btn btn-secondary" @onclick="DoCancel">Cancel</button>
+		</div>
+	</EditForm>
 }
 else
 {
-	<div>
+	<p>
 		You are already Signed Out.
-	</div>
+	</p>
 }
 

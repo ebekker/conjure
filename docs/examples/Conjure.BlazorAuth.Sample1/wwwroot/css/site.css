@@ -62,3 +62,7 @@ a, .btn-link {
 .nav-tabs {
     margin-bottom: 1rem;
 }
+
+.vm-postsubmit::before {
+    content: ''
+}

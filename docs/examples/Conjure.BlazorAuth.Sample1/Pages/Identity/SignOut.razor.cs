@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 
 namespace Conjure.BlazorAuth.Sample1.Pages.Identity
 {
+    [Route(IdentityConstants.SignOutRoute)]
     public partial class SignOut
     {
         [Inject]
@@ -19,6 +20,8 @@ namespace Conjure.BlazorAuth.Sample1.Pages.Identity
         private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
 
         private AuthenticationState? _authState;
+
+        private CustomValidator _customValidator = default!;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -43,15 +46,15 @@ namespace Conjure.BlazorAuth.Sample1.Pages.Identity
                     heasp.SetAuthenticationState(Task.FromResult(_authState));
                 }
 
-                //Nav.NavigateTo("/", forceLoad: false, replace: false);
+                Nav.NavigateTo("/");
                 return;
             }
-            await JS.InvokeVoidAsync("alert", "Unable to sign out.");
+            _customValidator.Add("Unable to sign out.");
         }
 
         private Task DoCancel()
         {
-            Nav.NavigateTo("/", forceLoad: false, replace: false);
+            Nav.NavigateTo("/");
             return Task.CompletedTask;
         }
     }

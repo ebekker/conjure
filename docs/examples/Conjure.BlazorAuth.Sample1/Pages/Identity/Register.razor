@@ -1,0 +1,40 @@
+﻿<h3>Register</h3>
+
+<div class="row">
+<div class="col-md-6">
+
+<div class="row">
+	<div class="col-md-8">
+		<p>
+			Use a local account to sign in.
+		</p>
+		<hr />
+		<EditForm Model=@_input OnValidSubmit=@DoRegister>
+			<DataAnnotationsValidator />
+			<CustomValidator @ref=_customValidator />
+			<ValidationSummary Model=@_input />
+
+			<div class="form-group">
+				<label for="username">Email</label>
+				<InputText id="username" type="text" class="form-control" @bind-Value=_input.Email />
+				<ValidationMessage For=@(() => _input.Email) />
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<InputText id="password" type="password" class="form-control" @bind-Value=_input.Password />
+				<ValidationMessage For=@(() => _input.Password) />
+			</div>
+			<div class="form-group">
+				<label for="confirmPassword">Confirm Password</label>
+				<InputText id="confirmPassword" type="password" class="form-control" @bind-Value=_input.ConfirmPassword />
+				<ValidationMessage For=@(() => _input.ConfirmPassword) />
+			</div>
+			<div class="form-group">
+				<button class="btn btn-primary" type="submit">Register</button>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+</div>
+</div>
