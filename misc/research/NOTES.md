@@ -31,6 +31,8 @@ PS> # dotnet add package Microsoft.EntityFrameworkCore.Tools
 
 To list all available files to be scaffolded:  `PS> dotnet aspnet-codegenerator identity -lf`
 
+To scaffold specific pages/files: `PS> dotnet aspnet-codegenerator identity -fi page1;page2;page3`
+
 Scaffolded:
 
 * dotnet aspnet-codegenerator identity -fi Account.Login
