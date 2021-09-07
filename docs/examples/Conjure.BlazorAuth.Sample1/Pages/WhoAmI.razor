@@ -1,7 +1,4 @@
 ﻿@page "/whoami"
-@using System.Text.Json
-@using System.Text.Json.Serialization
-@inject AuthenticationStateProvider AuthStateProvider
 
 <h3>Who Am I</h3>
 
@@ -34,23 +31,40 @@ else
     </div>
 }
 
+<hr />
+
+From DB:
+<div>
+    Identity User:
+    @if (_identityUser != null)
+    {
+        @Ser(_identityUser)
+    }
+</div>
+<div>
+    Roles:
+    <ul>
+    @if (_userRoles != null)
+    {
+        foreach (var role in _userRoles)
+        {
+            <li>@role</li>
+        }
+    }
+    </ul>
+</div>
+<div>
+    Claims:
+    <ul>
+    @if (_userClaims != null)
+    {
+        foreach (var claim in _userClaims)
+        {
+            <li>@Ser(claim)</li>
+        }
+    }
+    </ul>
+</div>
+
 @code {
-    System.Security.Claims.ClaimsPrincipal? user;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        user = authState.User;
-    }
-
-    JsonSerializerOptions jsonOpts = new JsonSerializerOptions()
-    {
-        ReferenceHandler = ReferenceHandler.IgnoreCycles,
-        WriteIndented = true,
-    };
-
-    string Ser<T>(T value)
-    {
-        return JsonSerializer.Serialize(value, jsonOpts);
-    }
 }
