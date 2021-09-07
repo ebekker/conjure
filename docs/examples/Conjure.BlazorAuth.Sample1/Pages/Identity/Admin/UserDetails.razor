@@ -1,0 +1,59 @@
+﻿@page "/Identity/Admin/Users/{Id}"
+
+<h3>User Details for @(_user == null ? Id : _user.UserName)</h3>
+
+<div class="row">
+<div class="col-md-6">
+
+@if (_user != null)
+{
+	<div class="row">
+		<div class="col-md-8">
+			<EditForm Model=@_user OnValidSubmit=@DoSave>
+				<DataAnnotationsValidator />
+				<CustomValidator @ref=_customValidator />
+				<ValidationSummary Model=@_user />
+
+				<div class="form-group">
+					<label for="Id">ID</label>
+					<InputText id="Id" type="text" class="form-control" @bind-Value=_user.Id readonly />
+				</div>
+				<div class="form-group">
+					<label for="UserName">User Name</label>
+					<InputText id="UserName" type="text" class="form-control" @bind-Value=_user.UserName readonly=@(!_editable) />
+					<ValidationMessage For=@(() => _user.UserName) />
+				</div>
+				<div class="form-group">
+					<label for="Email">Email</label>
+					<InputText id="Email" type="text" class="form-control" @bind-Value=_user.Email readonly=@(!_editable) />
+					<ValidationMessage For=@(() => _user.Email) />
+				</div>
+				<div class="form-group">
+					<label for="PhoneNumber">Phone Number</label>
+					<InputText id="PhoneNumber" type="text" class="form-control" @bind-Value=_user.PhoneNumber readonly=@(!_editable) />
+					<ValidationMessage For=@(() => _user.PhoneNumber) />
+				</div>
+				<div class="form-group form-check">
+					<InputCheckbox id="TwoFactorEnabled" class="form-check-input" @bind-Value=_user.TwoFactorEnabled disabled=@(!_editable) />
+					<label for="TwoFactorEnabled">2FA Enabled</label>
+					<ValidationMessage For=@(() => _user.TwoFactorEnabled) />
+				</div>
+				@if (_editable)
+				{
+					<div class="form-group">
+						<button class="btn btn-primary" type="submit">Save</button>
+					</div>
+				}
+				else
+				{
+					<div class="form-group">
+						<button class="btn btn-primary" type="button" @onclick=DoEdit>Edit</button>
+					</div>
+				}
+			</EditForm>
+		</div>
+	</div>
+}
+
+</div>
+</div>
