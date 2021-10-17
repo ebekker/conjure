@@ -1,20 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <Version>0.1.0</Version>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Version>0.1.0</Version>
+	</PropertyGroup>
 
-    <LangVersion>PREVIEW</LangVersion>
-  </PropertyGroup>
+	<ItemGroup>
+		<Using Include="Humanizer" />
+		<Using Include="Conjure" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.7.21378.6" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Humanizer" Version="2.11.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-rc.2.21480.10" />
+	</ItemGroup>
 
 </Project>
