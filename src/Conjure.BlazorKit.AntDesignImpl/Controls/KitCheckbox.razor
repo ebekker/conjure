@@ -1,0 +1,14 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TValue
+<FormItem Label="@Label">
+    @if (TriState)
+    {
+        <TriStateCheckbox Disabled=@(IsDisabled || IsReadOnly)
+            @bind-Value=@BoundValueAsNullableBool />
+    }
+    else
+    {
+        <Checkbox Disabled=@(IsDisabled || IsReadOnly) Indeterminate=@(BoundValue == null)
+            @bind-Value=@BoundValueAsBool />
+    }
+</FormItem>

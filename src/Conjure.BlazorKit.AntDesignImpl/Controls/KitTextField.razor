@@ -1,0 +1,6 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TValue
+<FormItem Label="@Label">
+    <Input TValue=@(TValue) Disabled=@IsDisabled
+        @bind-Value=@BoundValue />
+</FormItem>

@@ -1,0 +1,26 @@
+﻿@*
+    This code adapted from the original Checkbox.razor
+    https://github.com/ant-design-blazor/ant-design-blazor/blob/2cf102917d44755e3906bb456d06d7b20ca7402d/components/checkbox/Checkbox.razor
+*@
+@namespace AntDesign
+@inherits AntInputNullableBoolComponentBase
+
+
+<label class="@ClassMapperLabel.Class" style="@Style" id="@Id" @ref="Ref">
+    <span class="@ClassMapper.Class">
+        <input value="@Label"
+               checked="@InputChecked"
+               disabled="@Disabled"
+			   autofocus=@AutoFocus
+               @onchange="@InputCheckedChange"               
+               type="checkbox"
+               class="ant-checkbox-input" />
+        <span class="ant-checkbox-inner"></span>
+    </span>
+    @if (ChildContent != null)
+    {
+        <span>
+            @ChildContent
+        </span>
+    }
+</label>

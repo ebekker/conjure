@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Conjure.BlazorKit</RootNamespace>
+		<Version>0.1.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="Microsoft.AspNetCore.Components" />
+		<Using Include="Humanizer" />
+		<Using Include="Conjure" />
+		<Using Include="Conjure.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-rc.2.21480.10" />
+		<PackageReference Include="AntDesign" Version="0.10.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Conjure\Conjure.csproj" />
+		<ProjectReference Include="..\Conjure.BlazorKit\Conjure.BlazorKit.csproj" />
+		<ProjectReference Include="..\Conjure.Blazor\Conjure.Blazor.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
+
+</Project>

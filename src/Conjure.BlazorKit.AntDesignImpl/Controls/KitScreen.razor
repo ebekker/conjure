@@ -1,0 +1,11 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@if (_canExecute) {
+<CascadingValue TValue=@(IScreenContext) Value="this">
+	<Form Model=@Model>
+		@ChildContent
+	</Form>
+</CascadingValue>
+}
+else {
+	<b><i>CANNOT RUN</i></b>
+}
