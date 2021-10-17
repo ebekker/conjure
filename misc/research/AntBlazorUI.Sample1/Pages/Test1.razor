@@ -1,0 +1,28 @@
+﻿@page "/test1"
+@inherits ScreenBase
+<KitScreen Model=@this>
+
+    <h3>Test1</h3>
+
+    <KitTextField Binding=@(() => fooBar) />
+
+    <KitCheckbox Binding=@(() => trueFalseOther) TriState=@false />
+    <KitCheckbox Binding=@(() => trueFalseOther) TriState=@true />
+
+    <div>
+        The value is: @fooBar
+    </div>
+    <div>
+        The value is: @trueFalse
+    </div>
+    <div>
+        The value is: @trueFalseOther
+    </div>
+
+</KitScreen>
+@code {
+    private string fooBar = "This is foobar";
+
+    private bool trueFalse = true;
+    private bool? trueFalseOther = null;
+}

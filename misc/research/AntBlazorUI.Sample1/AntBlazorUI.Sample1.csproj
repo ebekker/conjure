@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AntDesign.Charts" Version="0.2.1" />
+    <PackageReference Include="AntDesign.ProLayout" Version="0.1.7" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.Blazor\Conjure.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.BlazorKit\Conjure.BlazorKit.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.BlazorKit.AntDesignImpl\Conjure.BlazorKit.AntDesignImpl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\DummyPages\" />
+  </ItemGroup>
+  
+</Project>
