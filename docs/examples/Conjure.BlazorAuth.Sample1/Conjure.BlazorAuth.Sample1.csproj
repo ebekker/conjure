@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Conjure.BlazorAuth.Sample1-E7D07439-C252-4E3A-B301-0FC6BE87D393</UserSecretsId>
   </PropertyGroup>
 

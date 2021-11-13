@@ -5,55 +5,173 @@
 <div class="row">
 <div class="col-md-6">
 
-@if (_user != null)
+@if (_user == null || _input == null)
 {
-	<div class="row">
-		<div class="col-md-8">
-			<EditForm Model=@_user OnValidSubmit=@DoSave>
-				<DataAnnotationsValidator />
-				<CustomValidator @ref=_customValidator />
-				<ValidationSummary Model=@_user />
+	<p>
+		<em>Loading user details...</em>
+	</p>
+}
+else
+{
+	<ul id="userDetailsTabs" class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(UserDetailsTabs.General)" @onclick=@(() => SelectTab(UserDetailsTabs.General))
+				href="#" @onclick:preventDefault=@true>General</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(UserDetailsTabs.Roles)" @onclick=@(() => SelectTab(UserDetailsTabs.Roles))
+				href="#" @onclick:preventDefault=@true>Roles</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(UserDetailsTabs.Claims)" @onclick=@(() => SelectTab(UserDetailsTabs.Claims))
+				href="#" @onclick:preventDefault=@true>Claims</a>
+		</li>
+	</ul>
+	<div id="userDetailsTabsContent" class="tab-content">
+		<div class="row">
+			<div class="col-md-8">
+				@switch (_selectedTab)
+				{
+					case UserDetailsTabs.General:
+						<text>
+							<EditForm Model=@_input OnValidSubmit=@DoSave>
+								<DataAnnotationsValidator />
+								<CustomValidator @ref=_customValidator />
+								<ValidationSummary Model=@_input />
 
-				<div class="form-group">
-					<label for="Id">ID</label>
-					<InputText id="Id" type="text" class="form-control" @bind-Value=_user.Id readonly />
-				</div>
-				<div class="form-group">
-					<label for="UserName">User Name</label>
-					<InputText id="UserName" type="text" class="form-control" @bind-Value=_user.UserName readonly=@(!_editable) />
-					<ValidationMessage For=@(() => _user.UserName) />
-				</div>
-				<div class="form-group">
-					<label for="Email">Email</label>
-					<InputText id="Email" type="text" class="form-control" @bind-Value=_user.Email readonly=@(!_editable) />
-					<ValidationMessage For=@(() => _user.Email) />
-				</div>
-				<div class="form-group">
-					<label for="PhoneNumber">Phone Number</label>
-					<InputText id="PhoneNumber" type="text" class="form-control" @bind-Value=_user.PhoneNumber readonly=@(!_editable) />
-					<ValidationMessage For=@(() => _user.PhoneNumber) />
-				</div>
-				<div class="form-group form-check">
-					<InputCheckbox id="TwoFactorEnabled" class="form-check-input" @bind-Value=_user.TwoFactorEnabled disabled=@(!_editable) />
-					<label for="TwoFactorEnabled">2FA Enabled</label>
-					<ValidationMessage For=@(() => _user.TwoFactorEnabled) />
-				</div>
-				@if (_editable)
-				{
-					<div class="form-group">
-						<button class="btn btn-primary" type="submit">Save</button>
-					</div>
+								<div class="form-group">
+									<label for="Id">ID</label>
+									<InputText id="Id" type="text" class="form-control" @bind-Value=_user.Id readonly />
+								</div>
+								<div class="form-group">
+									<label for="UserName">User Name</label>
+									<InputText id="UserName" type="text" class="form-control" @bind-Value=_input.UserName readonly=@(!_editable) />
+									<ValidationMessage For=@(() => _input.UserName) />
+								</div>
+								<div class="form-group">
+									<label for="Email">Email</label>
+									<InputText id="Email" type="text" class="form-control" @bind-Value=_input.Email readonly=@(!_editable) />
+									<ValidationMessage For=@(() => _input.Email) />
+								</div>
+								<div class="form-group">
+									<label for="PhoneNumber">Phone Number</label>
+									<InputText id="PhoneNumber" type="text" class="form-control" @bind-Value=_input.PhoneNumber readonly=@(!_editable) />
+									<ValidationMessage For=@(() => _input.PhoneNumber) />
+								</div>
+								<div class="form-group form-check">
+									<InputCheckbox id="TwoFactorEnabled" class="form-check-input" @bind-Value=_input.TwoFactorEnabled disabled=@(!_editable) />
+									<label for="TwoFactorEnabled">2FA Enabled</label>
+									<ValidationMessage For=@(() => _input.TwoFactorEnabled) />
+								</div>
+								@if (_editable)
+								{
+									<div class="form-group">
+										<button class="btn btn-primary" type="submit">Save</button>
+									</div>
+								}
+								else
+								{
+									<div class="form-group">
+										<button class="btn btn-primary" type="button" @onclick=DoEdit>Edit</button>
+									</div>
+								}
+							</EditForm>
+						</text>
+						break;
+					case UserDetailsTabs.Roles:
+						<text>
+							@if (_allRoles == null || _userRoles == null)
+							{
+								<p><i>no roles</i></p>
+							}
+							else
+							{
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var r in _allRoles)
+										{
+											<tr>
+												<td>@r.Name</td>
+												<td>
+													@if (_userRoles.Contains(r.Name))
+													{
+														<button class="btn btn-primary" type="button"
+															@onclick=@(() => DoRemoveRole(r))>Remove</button>
+													}
+													else
+													{
+														<button class="btn btn-primary" type="button"
+															@onclick=@(() => DoAddRole(r))>Add</button>
+													}
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							}
+						</text>
+						break;
+					case UserDetailsTabs.Claims:
+						<text>
+							@if (_claims == null)
+							{
+								<p><i>no claims</i></p>
+							}
+							else
+							{
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Type</th>
+											<th>Value</th>
+											<th>Value Type</th>
+											<th>Issuer</th>
+											<th>Original Issuer</th>
+											<th>Type</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var c in _claims)
+										{
+											<tr>
+												<td>@c.Type</td>
+												<td>@c.Value</td>
+												<td>@c.ValueType</td>
+												<td>@c.Issuer</td>
+												<td>@c.OriginalIssuer</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							}
+						</text>
+						break;
 				}
-				else
-				{
-					<div class="form-group">
-						<button class="btn btn-primary" type="button" @onclick=DoEdit>Edit</button>
-					</div>
-				}
-			</EditForm>
+			</div>
 		</div>
 	</div>
 }
 
 </div>
 </div>
+
+@code
+{
+	enum UserDetailsTabs
+	{
+		General = 0,
+		Roles = 1,
+		Claims = 2,
+	}
+
+	UserDetailsTabs _selectedTab = UserDetailsTabs.General;
+
+	string ActiveTabIf(UserDetailsTabs tab) => _selectedTab == tab ? "active" : "";
+	void SelectTab(UserDetailsTabs tab) => _selectedTab = tab;
+}

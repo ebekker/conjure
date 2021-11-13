@@ -1,0 +1,71 @@
+﻿@page "/Identity/Admin/Roles"
+
+<h3>Roles</h3>
+Skip=@Skip
+Take=@Take
+
+@if (_roles == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+   <table class="table">
+        <thead>
+            <tr>
+                <th>Role Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in _roles)
+            {
+                <tr>
+                    <td><a href="/Identity/Admin/Roles/@role.Id">@role.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item @(_prevDisabled ? "disabled" : "")">
+          <a class="page-link" href="#" @onclick=GoPrev @onclick:preventDefault aria-label="Previous" aria-disabled=@(_prevDisabled ? "true" : "false")>
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        @for (var page = 0; page < (_totalPages ?? _currentPage); page++)
+        {
+            var goPage = page;
+            <li class="page-item @(page == _currentPage ? "active" : "")" aria-current=@(page == _currentPage)>
+                <a class="page-link" href="#" @onclick="async () => await GoPage(goPage)" @onclick:preventDefault>@(page + 1)</a>
+            </li>
+        }
+        <li class="page-item @(_nextDisabled ? "disabled" : "")">
+          <a class="page-link" href="#" @onclick=GoNext @onclick:preventDefault aria-label="Next" aria-disabled=@(_nextDisabled ? "true" : "false")>
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div>
+        <h4>Add New</h4>
+        <div class="row">
+		    <div class="col-md-8">
+                <EditForm Model=@_input OnValidSubmit=@DoAdd>
+			        <DataAnnotationsValidator />
+			        <CustomValidator @ref=_customValidator />
+			        <ValidationSummary Model=@_input />
+
+			        <div class="form-group">
+				        <label for="RoleName">Role Name</label>
+				        <InputText id="RoleName" type="text" class="form-control" @bind-Value=_input.RoleName />
+				        <ValidationMessage For=@(() => _input.RoleName) />
+			        </div>
+			        <div class="form-group">
+				        <button class="btn btn-primary" type="submit">Add</button>
+			        </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}

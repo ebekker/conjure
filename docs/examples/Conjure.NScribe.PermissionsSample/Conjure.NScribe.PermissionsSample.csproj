@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-Conjure.NScribe.PermissionsSample-D3E889C4-4682-49C9-AC53-C5DFC86F23EF</UserSecretsId>
+    <LangVersion>PREVIEW</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0-preview.7.21378.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.7.21378.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0-preview.7.21378.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.7.21378.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.7.21378.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
+  <!--
+    - Since .NET 6 RC1 this source generator will only work in VS2022, and not from the CLI:
+	-    https://github.com/dotnet/roslyn/issues/56442
+	-
+	- Till we have a proper fix, can only build this in VS.
+    -->
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Conjure.NScribe\Conjure.NScribe.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <AdditionalFiles Include="*.nscribe/**" />
+  </ItemGroup>
+
+  <!-- <ItemGroup>
+    <None Remove="conjure.nscribe\include.scriban.txt" />
+    <None Remove="conjure.nscribe\permissions.txt" />
+  </ItemGroup> -->
+
+
+</Project>

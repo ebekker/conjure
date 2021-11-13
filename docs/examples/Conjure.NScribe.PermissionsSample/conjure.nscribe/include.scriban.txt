@@ -1,0 +1,19 @@
+{{
+
+###$mainMethod = GeneratorContext.Compilation.GetEntryPoint | call GeneratorContext.CancellationToken
+###$symbolType = ($mainMethod | interfaces 'Microsoft.CodeAnalysis.ISymbol')[0]
+###
+####$nsName = EntryPointNamespaceDisplayName
+####$clsName = EntryPointClassName
+###
+###$clsName    = ($mainMethod | property 'ContainingType'      $symbolType | call) | property 'Name' $symbolType | call
+###$nsName     = ($mainMethod | property 'ContainingNamespace' $symbolType | call)
+
+##$symbolType = ($mainMethod | interfaces 'Microsoft.CodeAnalysis.ISymbol')[0]
+
+$nsName1 = GeneratorContext.Compilation
+## | property 'GlobalNamespace'       $symbolType | call
+$nsName2 = GeneratorContext.Compilation
+## | property 'CommonGlobalNamespace' $symbolType | call
+
+}}

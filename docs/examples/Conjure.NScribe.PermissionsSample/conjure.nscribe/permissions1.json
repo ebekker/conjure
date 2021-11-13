@@ -1,0 +1,12 @@
+﻿{
+	"permissions": [
+		{
+			"name": "MyPermission1",
+			"description": "This is My First Permission"
+		},
+		{
+			"name": "MyPermission3",
+			"description": "This is My third\n Permission and it has\n a few newlines in\n the description"
+		}
+	]
+}

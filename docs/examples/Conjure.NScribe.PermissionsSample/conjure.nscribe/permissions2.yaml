@@ -1,0 +1,9 @@
+﻿permissions:
+
+  - name: MyPermission2
+    description: |
+      This is My First Permission.
+      It is my favorite permission.
+
+  - name: MyPermission4
+    description: This is My First Permission

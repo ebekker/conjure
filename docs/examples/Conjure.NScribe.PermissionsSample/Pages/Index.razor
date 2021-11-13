@@ -1,0 +1,38 @@
+﻿@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+Manage Permission Claims:
+
+@if (_claimsPrincipal == null)
+{
+	<p>Loading user...</p>
+}
+else if (_identityUser == null)
+{
+	<p>Could not resolve user identity</p>
+}
+else
+{
+	<div>
+		<ul>
+			@foreach (var c in _userClaims)
+			{
+				<li>@c.Type: @c.Value</li>
+			}
+		</ul>
+	</div>
+
+	@if (_hasPermClaim)
+	{
+		<button type="button" @onclick=@DoRemovePerm>Remove Permission</button>
+	}
+	else
+	{
+		<button type="button" @onclick=@DoAddPerm>Add Permission</button>
+	}
+}

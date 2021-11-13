@@ -19,10 +19,10 @@ else
 {
 	<ul id="signInMethodTabs" class="nav nav-tabs" role="tablist">
 		<li class="nav-item">
-			<a class="nav-link @(_showExternal ? "" : "active")" @onclick=ShowLocal>Local</a>
+			<a class="nav-link @(_showExternal ? "" : "active")" href="#" @onclick:preventDefault=@true @onclick=ShowLocal>Local</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link @(_showExternal ? "active" : "")" @onclick=ShowExternal>External</a>
+			<a class="nav-link @(_showExternal ? "active" : "")" href="#" @onclick:preventDefault=@true @onclick=ShowExternal>External</a>
 		</li>
 	</ul>
 	<div id="signInMethodContent" class="tab-content">

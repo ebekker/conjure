@@ -1,0 +1,61 @@
+{{ include 'include.scriban' }}
+using System;
+
+namespace foo.ns1
+{
+    /// <summary>
+    /// This is '{{$nsName1}}'
+    /// </summary>
+    class Foo1
+    {
+        //public const string NS = "ns1: {{$nsName1}}";
+        public const string NS = @"
+        td: 
+            {{TemplateData['dataFiles'] | string.replace '"' '""'}}
+            {{for $f in TemplateData['dataFiles']}}
+                {{$f}} = {{TemplateData[$f] | string.replace '"' '""'}}
+            {{end}}
+
+            DATA: {{TemplateData['data']['permissions'] | array.size}}
+            DATA: {{TemplateData['data']['permissions'][0].name | string.replace '"' '""'}}
+            DATA: {{TemplateData['data']['permissions'][0].description | string.replace '"' '""'}}
+        ";
+    }
+}
+
+namespace foo.ns2
+{
+    /// <summary>
+    /// This is '{{$nsName2}}'
+    /// </summary>
+    class Foo2
+    {
+        public const string NS = "ns2: {{$nsName}}";
+    }
+}
+
+///namespace {{$nsName}}
+///{
+///    public partial class {{$clsName}}
+///    {
+///        static partial void HelloFrom(string name)
+///        {
+///            Console.WriteLine($"NScribe Says: Hi from '{name}'");
+///
+///
+///            Console.WriteLine($"  MORE: {{$mainMethod}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | typename true}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | typeof}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | members  'C*'}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | members  'C*' $symbolType}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | interfaces 'Microsoft.CodeAnalysis.ISymbol'}}");
+///
+///            Console.WriteLine($"  MORE: {{$mainMethod | property 'ContainingType' $symbolType}}");
+///            Console.WriteLine($"  MORE: {{$mainMethod | property 'ContainingNamespace' $symbolType}}");
+///
+///            Console.WriteLine($"  MORE: clsName: {{$clsName}}");
+///            Console.WriteLine($"  MORE: nsName: {{$nsName}}");
+///
+///        }
+///    }
+///}

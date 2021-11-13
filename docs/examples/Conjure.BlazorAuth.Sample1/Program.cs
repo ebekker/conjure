@@ -5,6 +5,14 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Conjure.BlazorAuth.Sample1.Areas.Identity;
 using Conjure.BlazorAuth.Sample1.Data;
+using Conjure.BlazorAuth.Sample1;
+
+//if (true)
+//{
+//    Console.WriteLine(foo.ns1.Foo1.NS);
+//    Console.WriteLine(foo.ns2.Foo2.NS);
+//    return;
+//}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +33,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddBlazorAuth();
 builder.Services.AddBlazorAuthServices();
+
+builder.Services.AddSingleton<IPermissionSet, SystemPermissions>();
+builder.Services.AddSingleton<IPermissionSet, ApplicationPermissions>();
 
 var app = builder.Build();
 

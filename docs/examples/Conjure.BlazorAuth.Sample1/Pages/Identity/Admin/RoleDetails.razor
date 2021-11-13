@@ -1,0 +1,162 @@
+﻿@page "/Identity/Admin/Roles/{Id}"
+
+<h3>Role Details for @(_role == null ? Id : _role.Name)</h3>
+
+<div class="row">
+<div class="col-md-6">
+
+@if (_role == null || _input == null)
+{
+	<p>
+		<em>Loading role details...</em>
+	</p>
+}
+else
+{
+	<ul id="userDetailsTabs" class="nav nav-tabs" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(RoleDetailsTabs.General)" @onclick=@(() => SelectTab(RoleDetailsTabs.General))
+				href="#" @onclick:preventDefault=@true>General</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(RoleDetailsTabs.Permissions)" @onclick=@(() => SelectTab(RoleDetailsTabs.Permissions))
+				href="#" @onclick:preventDefault=@true>Permissions</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link @ActiveTabIf(RoleDetailsTabs.Claims)" @onclick=@(() => SelectTab(RoleDetailsTabs.Claims))
+				href="#" @onclick:preventDefault=@true>Claims</a>
+		</li>
+	</ul>
+	<div id="userDetailsTabsContent" class="tab-content">
+		<div class="row">
+			<div class="col-md-8">
+				@switch (_selectedTab)
+				{
+					case RoleDetailsTabs.General:
+						<text>
+		  					<EditForm Model=@_input OnValidSubmit=@DoSave>
+								<DataAnnotationsValidator />
+								<CustomValidator @ref=_customValidator />
+								<ValidationSummary Model=@_input />
+
+								<div class="form-group">
+									<label for="Id">ID</label>
+									<InputText id="Id" type="text" class="form-control" @bind-Value=_role.Id readonly />
+								</div>
+								<div class="form-group">
+									<label for="UserName">Role Name</label>
+									<InputText id="UserName" type="text" class="form-control" @bind-Value=_input.RoleName readonly=@(!_editable) />
+									<ValidationMessage For=@(() => _input.RoleName) />
+								</div>
+								@if (_editable)
+								{
+									<div class="form-group">
+										<button class="btn btn-primary" type="submit">Save</button>
+									</div>
+								}
+								else
+								{
+									<div class="form-group">
+										<button class="btn btn-primary" type="button" @onclick=DoEdit>Edit</button>
+									</div>
+								}
+							</EditForm>
+						</text>
+						break;
+					case RoleDetailsTabs.Permissions:
+						<text>
+							@if (_allPerms == null || _rolePerms == null)
+							{
+								<p><i>no permissions</i></p>
+							}
+							else
+							{
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var p in _allPerms)
+										{
+											<tr>
+												<td>@p</td>
+												<td>
+													@if (_rolePerms.Contains(p))
+													{
+														<button class="btn btn-primary" type="button"
+															@onclick=@(() => DoRemovePerm(p))>Remove</button>
+													}
+													else
+													{
+														<button class="btn btn-primary" type="button"
+															@onclick=@(() => DoAddPerm(p))>Add</button>
+													}
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							}
+						</text>
+						break;
+					case RoleDetailsTabs.Claims:
+						<text>
+							@if (_claims == null)
+							{
+								<p><i>no claims</i></p>
+							}
+							else
+							{
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Type</th>
+											<th>Value</th>
+											<th>Value Type</th>
+											<th>Issuer</th>
+											<th>Original Issuer</th>
+											<th>Type</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var c in _claims)
+										{
+											<tr>
+												<td>@c.Type</td>
+												<td>@c.Value</td>
+												<td>@c.ValueType</td>
+												<td>@c.Issuer</td>
+												<td>@c.OriginalIssuer</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							}
+						</text>
+						break;
+				}
+			</div>
+		</div>
+	</div>
+}
+
+</div>
+</div>
+
+@code
+{
+	enum RoleDetailsTabs
+	{
+		General,
+		Permissions,
+		Claims,
+	}
+
+	RoleDetailsTabs _selectedTab = RoleDetailsTabs.General;
+
+	string ActiveTabIf(RoleDetailsTabs tab) => _selectedTab == tab ? "active" : "";
+	void SelectTab(RoleDetailsTabs tab) => _selectedTab = tab;
+}

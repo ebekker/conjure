@@ -1,0 +1,63 @@
+﻿@page "/Identity/Admin/Users"
+
+<h3>Users</h3>
+
+Skip=@Skip
+Take=@Take
+
+@if (_users == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+   <table class="table">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>PHone</th>
+                <th>2FA Enabled</th>
+                <th>Locked Out</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in _users)
+            {
+                <tr>
+                    <td><a href="/Identity/Admin/Users/@user.Id">@user.UserName</a></td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.TwoFactorEnabled</td>
+                    <td>@(!user.LockoutEnabled
+                        ? "n/a"
+                        : user.LockoutEnd == null
+                            ? "no"
+                            : "till " + user.LockoutEnd)</td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item @(_prevDisabled ? "disabled" : "")">
+          <a class="page-link" href="#" @onclick=GoPrev @onclick:preventDefault aria-label="Previous" aria-disabled=@(_prevDisabled ? "true" : "false")>
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        @for (var page = 0; page < (_totalPages ?? _currentPage); page++)
+        {
+            var goPage = page;
+            <li class="page-item @(page == _currentPage ? "active" : "")" aria-current=@(page == _currentPage)>
+                <a class="page-link" href="#" @onclick="async () => await GoPage(goPage)" @onclick:preventDefault>@(page + 1)</a>
+            </li>
+        }
+        <li class="page-item @(_nextDisabled ? "disabled" : "")">
+          <a class="page-link" href="#" @onclick=GoNext @onclick:preventDefault aria-label="Next" aria-disabled=@(_nextDisabled ? "true" : "false")>
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+}

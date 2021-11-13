@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Conjure.BlazorAuth.Sample1.Pages
 {
@@ -30,8 +26,11 @@ namespace Conjure.BlazorAuth.Sample1.Pages
             user = authState.User;
 
             _identityUser = await UserManager.GetUserAsync(user);
-            _userRoles = await UserManager.GetRolesAsync(_identityUser);
-            _userClaims = await UserManager.GetClaimsAsync(_identityUser);
+            if (_identityUser != null)
+            {
+                _userRoles = await UserManager.GetRolesAsync(_identityUser);
+                _userClaims = await UserManager.GetClaimsAsync(_identityUser);
+            }
         }
 
         JsonSerializerOptions jsonOpts = new JsonSerializerOptions()

@@ -1,0 +1,41 @@
+{{ include 'include.scriban' }}
+namespace ConjureApp
+{
+    public partial class ApplicationPermissions
+    {
+        {{for $perm in TemplateData['data']['permissions']}}
+        /// <summary>
+        /// {{$perm.description | string.strip_newlines}}
+        /// </summary>
+        public const string {{$perm.name}} = nameof({{$perm.name}});
+        {{end}}
+
+        protected partial IEnumerable<string> ComputeAllPermissions()
+        {
+            {{for $perm in TemplateData['data']['permissions']}}
+            yield return {{$perm.name}};
+            {{end}}
+        }
+    }
+}
+
+
+
+
+
+
+
+
+////using System;
+////
+////namespace {{$nsName}}
+////{
+////    public partial class {{$clsName}}
+////    {
+////        static partial void GoodByeTo(string name)
+////        {
+////            Console.WriteLine($"NScribe Says: Bye to '{name}'");
+////        }
+////    }
+////}
+////
