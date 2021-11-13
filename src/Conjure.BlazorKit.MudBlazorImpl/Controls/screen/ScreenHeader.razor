@@ -1,0 +1,18 @@
+﻿@namespace Conjure.BlazorKit.Controls
+<CascadingValue TValue=@(IActionContainer) Value=@this>
+    @Actions
+</CascadingValue>
+<MudCard Class="my-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Type="Typo.h4">@TitleContent</MudText>
+            Screen Rendered at @DateTime.Now
+        </CardHeaderContent>
+        <CardHeaderActions>
+            @foreach (var action in _actions)
+            {
+                <ActionWrapper Action=@action />
+            }
+        </CardHeaderActions>
+    </MudCardHeader>
+</MudCard>

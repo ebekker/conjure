@@ -1,0 +1,6 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TDataItem
+<MudTextField T=@(TDataItem) Label=@Label Class="my-3"
+	Disabled=@IsDisabled ReadOnly=@IsReadOnly Lines=@Lines Format=@Format
+    Variant=@(IsReadOnly ? Variant.Filled : Variant.Outlined)
+	@bind-Value=@BoundValue />

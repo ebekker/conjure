@@ -1,0 +1,8 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TDataItem
+<div>
+<MudCheckBox T=@(TDataItem) Label=@Label
+	Disabled=@IsDisabled ReadOnly=@IsReadOnly
+    TriState=@TriState
+    @bind-Checked=@BoundValue />
+</div>

@@ -1,0 +1,18 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@if (_iconButton)
+{
+    <MudTooltip Text=@_description>
+        <MudIconButton Icon=@_icon
+            Title=@_description
+            Disabled=@_disabled
+            OnClick=@(async (arg) => await Invoke())></MudIconButton>
+    </MudTooltip>
+}
+else
+{
+    <MudTooltip Text=@_description>
+        <MudButton StartIcon=@_icon
+            Disabled=@_disabled
+            OnClick=@(async (arg) => await Invoke())>@_label</MudButton>
+    </MudTooltip>
+}

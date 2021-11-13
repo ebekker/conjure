@@ -1,0 +1,20 @@
+﻿@namespace Conjure.BlazorKit.Controls
+<PageTitle>@Label</PageTitle>
+@if (_canExecute)
+{
+    <CascadingValue TValue=@IScreenContext Value=@this>
+        <ScreenHeader>
+            <TitleContent>@Label</TitleContent>
+            <Actions>@Actions</Actions>
+        </ScreenHeader>
+        @ChildContent
+    </CascadingValue>
+}
+else
+{
+    <b><i>[Access Denied]</i></b>
+}
+
+<div>
+    Screen Rendered at @DateTime.Now
+</div>
