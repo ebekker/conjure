@@ -1,0 +1,44 @@
+﻿@page "/test1"
+@inherits ScreenBase
+
+<KitScreen Screen=@this>
+    <Actions>
+        <KitAction OnInvoke=@(() => Console.WriteLine("Action #1 Invoked")) />
+        <KitAction Label="Action #2"
+                   OnInvoke=@(() => Console.WriteLine("Action #2 Invoked")) />
+        <KitAction Label="Action #3"
+                   CanInvoke=@((arg) => arg.Result = canInvoke)
+                   OnInvoke=@(() => Console.WriteLine("Action #3 Invoked")) />
+        <KitAction Binding=@(() => Console.Out.WriteLineAsync("Action #4 Invoked")) />
+        <KitAction Binding=@(() => Action5()) />
+        <KitAction Binding=@(() => Action6())
+                   CanInvoke=@((arg) => arg.Result = canInvoke) />
+    </Actions>
+    <ChildContent>
+        <div>
+            <KitTextField Binding=@(() => someSampleText) /> : @someSampleText
+        </div>
+        <div>
+            <KitCheckbox Binding=@(() => canInvoke) /> : @canInvoke
+        </div>
+    </ChildContent>
+</KitScreen>
+
+
+
+@code {
+    private string? someSampleText;
+    private bool canInvoke;
+
+    private Task Action5()
+    {
+        Console.WriteLine("Action #5 Invoked");
+        return Task.CompletedTask;
+    }
+
+    private Task Action6()
+    {
+        Console.WriteLine("Action #6 Invoked");
+        return Task.CompletedTask;
+    }
+}

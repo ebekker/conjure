@@ -1,0 +1,16 @@
+﻿@page "/test2even"
+@inherits ScreenBase
+@*<Test2Even.Meta>*@
+
+@{
+    //throw new Exception("FOO");
+}
+
+<KitScreen Label="Test #2 on Even Minutes"
+           CanExecute=@(e => e.Result = ComputeCanExecute())>
+    <h3>Test #2 (Even Minute)</h3>
+</KitScreen>
+
+@code {
+
+}

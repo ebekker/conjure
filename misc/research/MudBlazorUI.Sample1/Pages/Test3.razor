@@ -1,0 +1,61 @@
+﻿@page "/test3"
+@using ConjureApp.Data
+@using ConjureApp.Data.Entities
+@inherits ScreenBase<DataWorkspace>
+
+<KitScreen Screen=@this>
+    <Actions>
+        <KitAction Binding=@(() => Action5()) />
+        <KitAction Binding=@(() => Action6())
+                   CanInvoke=@((arg) => arg.Result = canInvoke) />
+    </Actions>
+    <ChildContent>
+        <div>
+            <KitTextField Binding=@(() => someSampleText) /> : @someSampleText
+        </div>
+        <div>
+            <KitCheckbox Binding=@(() => canInvoke) /> : @canInvoke
+        </div>
+        <div>
+            @if (_customers == null)
+            {
+                <i>loading customers</i>
+            }
+            else
+            {
+                foreach (var c in _customers)
+                {
+                    <li>
+                        @c.FirstName @c.LastName
+                    </li>
+                }
+            }
+        </div>
+
+    </ChildContent>
+</KitScreen>
+
+
+
+@code {
+    private string? someSampleText;
+    private bool canInvoke;
+    private IEnumerable<Customer>? _customers = null;
+
+    protected override void OnInitialized()
+    {
+        _customers = DWS.AdventureWorksLT2017.Customers.Take(10).ToList();
+    }
+
+    private Task Action5()
+    {
+        Console.WriteLine("Action #5 Invoked");
+        return Task.CompletedTask;
+    }
+
+    private Task Action6()
+    {
+        Console.WriteLine("Action #6 Invoked");
+        return Task.CompletedTask;
+    }
+}

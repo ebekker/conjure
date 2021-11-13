@@ -1,0 +1,64 @@
+﻿@page "/test5"
+@inherits ScreenBase<DataWorkspace>
+
+<KitScreen Screen=@this>
+    <Actions>
+        <KitAction Binding=@(() => Action5()) />
+        <KitAction Binding=@(() => Action6())
+                   CanInvoke=@((arg) => arg.Result = canInvoke) />
+    </Actions>
+    <ChildContent>
+        <div>
+            <KitTextField Binding=@(() => someSampleText) /> : @someSampleText
+        </div>
+        <div>
+            <KitCheckbox Binding=@(() => canInvoke) /> : @canInvoke
+        </div>
+        <div>
+            <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers) />
+        </div>
+        <div>
+            <div>Selected Customer: @_selectedCustomer</div>
+            <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers)
+                         @bind-SelectedItem=_selectedCustomer
+                         AllowSearch=@true>
+                <SortBy>
+                    <KitSortBy Binding=@(item => item!.FirstName) />
+                    <KitSortBy Binding=@(item => item!.LastName) />
+                    <KitSortBy Binding=@(item => item!.EmailAddress) />
+                </SortBy>
+                <SearchBy>
+                    <KitSearchBy Binding=@((item) => item!.FirstName) />
+                    <KitSearchBy Binding=@((item) => item!.LastName) />
+                    <KitSearchBy Binding=@((item) => item!.EmailAddress) />
+                </SearchBy>
+                <ItemTemplate>
+                    @context!.FirstName @context.LastName
+                </ItemTemplate>
+
+            </KitDataList>
+        </div>
+
+    </ChildContent>
+</KitScreen>
+
+
+
+@code {
+    private string? someSampleText;
+    private bool canInvoke;
+
+    private Customer? _selectedCustomer;
+
+    private Task Action5()
+    {
+        Console.WriteLine("Action #5 Invoked");
+        return Task.CompletedTask;
+    }
+
+    private Task Action6()
+    {
+        Console.WriteLine("Action #6 Invoked");
+        return Task.CompletedTask;
+    }
+}

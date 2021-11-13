@@ -1,0 +1,71 @@
+﻿@page "/test4"
+@inherits ScreenBase<DataWorkspace>
+
+<KitScreen Screen=@this>
+    <Actions>
+        <KitAction Binding=@(() => Action5()) />
+        <KitAction Binding=@(() => Action6())
+                   CanInvoke=@((arg) => arg.Result = canInvoke) />
+    </Actions>
+    <ChildContent>
+        <div>
+            <KitTextField Binding=@(() => someSampleText) /> : @someSampleText
+        </div>
+        <div>
+            <KitCheckbox Binding=@(() => canInvoke) /> : @canInvoke
+        </div>
+        <div>
+            <div>SelectedItem: @_selected1</div>
+            <KitDataList Binding=@(() => myLocalCustomers)
+                         @bind-SelectedItem=_selected1 />
+        </div>
+        <div>
+            <div>SelectedItem: @_selected2</div>
+            <KitDataList Binding=@(() => myLocalCustomers)
+                         @bind-SelectedItem=_selected2
+                         AllowSearch=@true>
+                <SortBy>
+                    <KitSortBy Binding=@(item => item!.CustomerID) />
+                    <KitSortBy Binding=@(item => item!.FirstName) />
+                    <KitSortBy Binding=@(item => item!.LastName) />
+                    <KitSortBy Label="Initials (FName + LName)"
+                                Expression=@((q, sd) => q.OrderByDirection(sd, x => x.FirstName.Substring(0, 1) + x.LastName.Substring(0, 1))) />
+                    <KitSortBy Label="Initials (LName + FName)"
+                                Expression=@((q, sd) => q.OrderByDirection(sd, x => x.LastName.Substring(0, 1) + x.FirstName.Substring(0, 1))) />
+                </SortBy>
+                <SearchBy>
+                    <KitSearchBy CaseInsensitive=@true Binding=@(item => item!.FirstName) />
+                    <KitSearchBy CaseInsensitive=@true Binding=@(item => item!.LastName) />
+                    <KitSearchBy CaseInsensitive=@true Binding=@(item => item!.EmailAddress) />
+                </SearchBy>
+                <ItemTemplate>
+                    @context!.FirstName @context.LastName
+                </ItemTemplate>
+
+            </KitDataList>
+        </div>
+
+    </ChildContent>
+</KitScreen>
+
+
+
+@code {
+    private string? someSampleText;
+    private bool canInvoke;
+
+    private MyCustomer? _selected1;
+    private MyCustomer? _selected2;
+
+    private Task Action5()
+    {
+        Console.WriteLine("Action #5 Invoked");
+        return Task.CompletedTask;
+    }
+
+    private Task Action6()
+    {
+        Console.WriteLine("Action #6 Invoked");
+        return Task.CompletedTask;
+    }
+}

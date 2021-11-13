@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- https://github.com/dotnet/aspnetcore/issues/38238#issuecomment-964622487 -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="advWorks.efx\templates\entities\models\**" />
+    <Compile Remove="advWorksLT.efx\templates\entities\models\**" />
+    <Content Remove="advWorks.efx\templates\entities\models\**" />
+    <Content Remove="advWorksLT.efx\templates\entities\models\**" />
+    <EmbeddedResource Remove="advWorks.efx\templates\entities\models\**" />
+    <EmbeddedResource Remove="advWorksLT.efx\templates\entities\models\**" />
+    <None Remove="advWorks.efx\templates\entities\models\**" />
+    <None Remove="advWorksLT.efx\templates\entities\models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Conjure" />
+    <Using Include="Conjure.Blazor" />
+    <Using Include="Conjure.BlazorKit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="MudBlazor" Version="5.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.Blazor\Conjure.Blazor.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.BlazorKit\Conjure.BlazorKit.csproj" />
+    <ProjectReference Include="..\..\..\src\Conjure.BlazorKit.MudBlazorImpl\Conjure.BlazorKit.MudBlazorImpl.csproj" />
+  </ItemGroup>
+
+</Project>
