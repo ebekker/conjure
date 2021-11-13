@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-BlazorServerAuth-44F8B738-DD0A-4EC2-BCDB-548D13008297</UserSecretsId>
   </PropertyGroup>
 

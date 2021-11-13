@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorServerAuth.Data;
-
-public class ApplicationDbContext : IdentityDbContext
+namespace BlazorServerAuth.Data
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+
+    public class ApplicationDbContext : IdentityDbContext
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
     }
 }
