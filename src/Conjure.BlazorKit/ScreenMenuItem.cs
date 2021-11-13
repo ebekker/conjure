@@ -1,24 +1,45 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Reflection;
+using Conjure.BlazorKit.Attributes;
+using Microsoft.AspNetCore.Components;
 
 namespace Conjure.BlazorKit;
 
-
 public class ScreenMenuItem<TScreen> : NavMenuItem
-    where TScreen : ScreenBase
+    where TScreen : ScreenBase, new()
 {
-    private static void InitFromComponent(out string? label, out string? href)
-    {
-        var t = typeof(TScreen);
-        label = t.Name;
-
-        var route = t.GetCustomAttributes(typeof(RouteAttribute), true).FirstOrDefault() as RouteAttribute;
-        href = route?.Template;
-    }
+    ComponentBase cb1;
 
     public ScreenMenuItem()
     {
-        InitFromComponent(out var label, out var href);
-        base.Label = label;
-        base.Href = href;
     }
+
+    public override Task InitAsync(IAppContext app)
+    {
+        var screenType = typeof(TScreen);
+
+        if (Label == null)
+        {
+            Label = screenType.Name.Titleize();
+        }
+
+        if (Href == null)
+        {
+            var route = screenType.GetCustomAttributes(typeof(RouteAttribute), true)
+                .FirstOrDefault() as RouteAttribute;
+            Href = route?.Template;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public virtual Func<IAppContext, bool> ComputeCanExecute { get; set; }
+    public virtual Action<IAppContext> ComputeOnExecute { get; set; }
+
+    public override bool CanExecute(IAppContext app)
+    {
+        return ComputeCanExecute?.Invoke(app) ?? true;
+    }
+
+    public override void OnExecute(IAppContext app)
+    { }
 }

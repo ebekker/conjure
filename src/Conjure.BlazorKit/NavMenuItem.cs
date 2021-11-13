@@ -8,26 +8,27 @@ public class NavMenuItem
 
     public NavMenuItem(string label)
     {
-        ArgumentNullException.ThrowIfNull(Label);
+        ArgumentNullException.ThrowIfNull(label);
         Label = label;
     }
 
     protected NavMenuItem()
     { }
 
-    public ComponentBase? Screen { get; }
+    public string Key { get; set; } = Guid.NewGuid().ToString();
 
-    public string Key { get; init; } = Guid.NewGuid().ToString();
+    public string? Label { get; set; }
 
-    public string? Label { get; init; }
+    public string? Href { get; set; }
 
-    public string? Href { get; init; }
+    public string? Icon { get; set; }
 
-    public string? Icon { get; init; }
+    public bool PrefixMatch { get; set; }
 
-    public bool PrefixMatch { get; init; }
+    public virtual Task InitAsync(IAppContext app) => Task.CompletedTask;
 
-    public Func<IAppContext, Task<bool>>? CanExecute { get; init; }
+    public virtual bool CanExecute(IAppContext app) => true;
 
-    public Func<IAppContext, Task>? OnExecute { get; init; }
+    public virtual void OnExecute(IAppContext app)
+    { }
 }
