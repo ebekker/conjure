@@ -1,22 +1,24 @@
-namespace Conjure.Options;
-
-// This code is _*heavily*_ based on EFG:
-//    https://github.com/loresoft/EntityFrameworkCore.Generator/
-
-/// <summary>
-/// 
-/// </summary>
-public interface IOptionVariable
+namespace Conjure.Options
 {
-    /// <summary>
-    /// Sets variables on the specified VariableDictionary.
-    /// </summary>
-    /// <param name="variableDictionary">The variable dictionary.</param>
-    void Set(VariableDictionary variableDictionary);
+
+    // This code is _*heavily*_ based on EFG:
+    //    https://github.com/loresoft/EntityFrameworkCore.Generator/
 
     /// <summary>
-    /// Removes variables on the specified VariableDictionary.
+    /// 
     /// </summary>
-    /// <param name="variableDictionary">The variable dictionary.</param>
-    void Remove(VariableDictionary variableDictionary);
+    public interface IOptionVariable
+    {
+        /// <summary>
+        /// Sets variables on the specified VariableDictionary.
+        /// </summary>
+        /// <param name="variableDictionary">The variable dictionary.</param>
+        void Set(VariableDictionary variableDictionary);
+
+        /// <summary>
+        /// Removes variables on the specified VariableDictionary.
+        /// </summary>
+        /// <param name="variableDictionary">The variable dictionary.</param>
+        void Remove(VariableDictionary variableDictionary);
+    }
 }

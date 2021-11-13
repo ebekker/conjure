@@ -1,25 +1,30 @@
-﻿namespace Conjure.Validation;
+﻿// Conjure application framework.
+// Copyright (C) Conjure.
 
-public class ValidationMessage
+namespace Conjure.Validation
 {
-    public ValidationMessage(string message,
-        params string[] members)
+
+    public class ValidationMessage
     {
-        Message = message;
-        Members = members;
+        public ValidationMessage(string message,
+            params string[] members)
+        {
+            Message = message;
+            Members = members;
+        }
+        public ValidationMessage(string message,
+            ValidationSeverity severity,
+            params string[] members)
+        {
+            Message = message;
+            Severity = severity;
+            Members = members;
+        }
+
+        public string Message { get; init; }
+
+        public ValidationSeverity Severity { get; init; }
+
+        public IEnumerable<string> Members { get; init; }
     }
-    public ValidationMessage(string message,
-        ValidationSeverity severity,
-        params string[] members)
-    {
-        Message = message;
-        Severity = severity;
-        Members = members;
-    }
-
-    public string Message { get; init; }
-
-    public ValidationSeverity Severity { get; init; }
-
-    public IEnumerable<string> Members { get; init; }
 }

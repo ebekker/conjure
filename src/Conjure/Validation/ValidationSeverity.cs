@@ -1,4 +1,7 @@
-﻿namespace Conjure.Validation;
+﻿// Conjure application framework.
+// Copyright (C) Conjure.
+
+namespace Conjure.Validation;
 
 public enum ValidationSeverity
 {
