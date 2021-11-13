@@ -1,0 +1,17 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TValue
+@* Need the outer DIV for CSS-isolation targeting *@
+<div>
+    <FormItem Label="@Label">
+        @if (!IsDisabled && IsReadOnly)
+        {
+            @*DatePicker does not support a native ReadOnly functionality so we simulate it with a simple input field *@
+            <Input ReadOnly=@true Value=@BoundValueFormatted />
+        }
+        else
+        {
+            <DatePicker TValue=@(TValue) Disabled=@IsDisabled
+                @bind-Value=@BoundValue />
+        }
+    </FormItem>
+</div>

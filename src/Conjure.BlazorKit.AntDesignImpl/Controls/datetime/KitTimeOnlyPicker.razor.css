@@ -1,0 +1,9 @@
+/*
+ * To support a read-only mode for DateTime picker
+ * we subtitute the Ant-native DT Picker with a
+ * plain textbox which we need to adjust styling
+ * for to make it look more appropriate.
+ */
+::deep .ant-input {
+    width: auto;
+}
