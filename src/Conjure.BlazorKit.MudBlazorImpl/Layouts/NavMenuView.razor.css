@@ -1,0 +1,5 @@
+﻿::deep .active > .mud-nav-link {
+    font-weight: 500 !important;
+    color: var(--mud-palette-primary);
+    background-color: var(--mud-palette-action-default-hover);
+}

@@ -1,0 +1,32 @@
+﻿@namespace Conjure.BlazorKit.Layouts
+<div>
+@if (MenuItems != null)
+{
+    @foreach (var mi in MenuItems)
+    {
+        if (mi == NavMenuItem.Separator)
+        {
+            <MudDivider DividerType=@DividerType.Inset />
+        }
+        else if (mi is NavMenuGroup childGroup)
+        {
+            <MudNavGroup Title=@mi.Label Icon=@mi.Icon Expanded=@(IsExpanded(childGroup))>
+                <NavMenuView MenuItems=@(childGroup.Children) />
+            </MudNavGroup>
+        }
+        else if (mi.CanExecute(App))
+        {
+            <MudNavLink Icon=@mi.Icon Href=@mi.Href Class=@(IsActive(mi) ? "active" : "")
+                Match=@(mi.PrefixMatch ? NavLinkMatch.Prefix : NavLinkMatch.All)
+                OnClick=@(async ev => await HandleClick(mi))>@mi.Label</MudNavLink>
+        }
+    }
+}
+</div>
+@*
+<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="/counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
+    <MudNavLink Href="/fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>
+</MudNavMenu><h3>NavMenu</h3>
+*@
