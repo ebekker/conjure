@@ -1,0 +1,64 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@using Conjure.BlazorKit.Data
+@typeparam TDataItem
+<CascadingValue TValue=@(IDataSorter<TDataItem>) Value=@this>
+    @SortBy
+</CascadingValue>
+<CascadingValue TValue=@(IDataSearcher<TDataItem>) Value=@this>
+    @SearchBy
+</CascadingValue>
+<CascadingValue TValue=@(IActionContainer) Value=@this>
+    @Actions
+</CascadingValue>
+<MudTable T=@(TDataItem) @ref=@_table Dense=@true Hover=@true FixedHeader=@true Loading=@_isLoading
+    ServerData=@OnLoadData @bind-SelectedItem=@SelectedItemBound
+    RowStyleFunc=@((v,i) => object.Equals(v, SelectedItem) ? "background-color: #e0e0e0;" : "")>
+
+    <ToolBarContent>
+        <MudText Typo=@Typo.h6>@Label</MudText>
+        @foreach (var action in _actions)
+        {
+            <ActionWrapper Action=@action />
+        }
+        <MudSpacer />
+        @if (_sortKeys.Count > 0)
+        {
+            <TableSorter @ref=_tableSorter Class="mx-3" SortKeys=@_sortKeys />
+        }
+        @if (AllowSearch)
+        {
+            <MudTextField T="string" PlaceHolder="Search" 
+                Adornment="Adornment.Start"  AdornmentIcon="@Icons.Material.Filled.Search"
+                IconSize="Size.Medium" Class="mt-0" Style="position: relative; top: -5px;"
+                ValueChanged=@OnSearch Clearable=@true></MudTextField>
+        }
+    </ToolBarContent>
+
+    <NoRecordsContent>
+        <i>no matching records found</i>
+    </NoRecordsContent>
+
+    <RowTemplate>
+        @** TODO: This onclick handler is a temporary fix for a weird behavior where
+            MudTable selection does not work right inside of an outer template control,
+            see the comment with the TemporarySetSelectedItem method for more details *@
+        <MudTd @onclick=@(ev => TemporarySetSelectItem(context))>
+            @ItemTemplate.Invoke(context)
+        </MudTd>
+    </RowTemplate>
+
+    <FooterContent>
+        @** Loading indicator seems broken when using ServerData function so we implement our own *@ 
+        @if (_isLoading)
+        {
+            <td colspan="1000">
+                <MudProgressLinear Color=@Color.Info Class="mud-table-loading-progress" Indeterminate="true" />
+            </td>
+        }
+    </FooterContent>
+
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+
+</MudTable>

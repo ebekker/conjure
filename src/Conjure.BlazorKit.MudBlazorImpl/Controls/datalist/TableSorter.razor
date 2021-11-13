@@ -1,0 +1,24 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@typeparam TDataItem
+<MudButtonGroup Variant="Variant.Outlined" Class=@Class Style=@Style>
+
+    <MudButton Disabled=@(SelectedSortKey == null)
+               OnClick="ToggleDirection">@ToggleButtonLabel</MudButton>
+
+    <MudMenu Dense=@true Icon=@Icons.Material.Filled.ArrowDropDown
+             Direction=@Direction.Bottom
+             OffsetY=@true>
+
+        <MudMenuItem OnClick=@(() => SortBy(null))>
+            (none) @if (SelectedSortKey == null) { <span> <b>✔</b></span> }
+        </MudMenuItem>
+
+        @foreach (var sk in SortKeys)
+        {
+            <MudMenuItem OnClick=@(() => SortBy(sk))>
+                @sk.Label @if (SelectedSortKey == sk) { <span> <b>✔</b></span> }
+            </MudMenuItem>
+        }
+    </MudMenu>
+
+</MudButtonGroup>
