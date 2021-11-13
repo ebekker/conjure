@@ -47,11 +47,26 @@ namespace Conjure.EFX.SourceGenerator
 
         public void Execute(GeneratorExecutionContext context)
         {
+            // Research:
+            //    https://dominikjeske.github.io/source-generators/
+            //    https://docs.microsoft.com/en-us/dotnet/api/microsoft.build.execution.projectinstance.fromfile?view=msbuild-16-netcore
+            //    https://github.com/unoplatform/Uno.SourceGeneration
+            //    https://platform.uno/blog/using-msbuild-items-and-properties-in-c-9-source-generators/
+            //    https://www.cazzulino.com/source-generators.html#debugging-source-generators
+
+
+
+            // Experiments from:
+            //  https://platform.uno/blog/using-msbuild-items-and-properties-in-c-9-source-generators/
+            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("$build_property.SomeName", out var value);
+            // https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022
+            context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.MSBuildProjectDirectory", out var projectDirectory);
+            //var mainSyntaxTree = context.Compilation.SyntaxTrees.First(x => x.HasCompilationUnitRoot);
+            //var directory = Path.GetDirectoryName(mainSyntaxTree.FilePath);
+
             var profiles = ProfileInfo.GetProfiles();
             foreach (var p in profiles)
             {
-                
-
                 var cache = Path.Combine(p.ProfilePath, ModelCacheBuilder.DefaultModelCacheFileName);
                 if (File.Exists(cache))
                 {

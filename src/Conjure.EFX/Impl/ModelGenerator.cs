@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
 using Conjure.EFX.Generation;
@@ -194,6 +194,7 @@ namespace Conjure.EFX.Impl
                 property.NativeType = mapping.StoreTypeNameBase;
                 property.DataType = mapping.DbType ?? DbType.AnsiString;
                 property.SystemType = mapping.ClrType;
+                property.IsValueType = mapping.ClrType.IsValueType;
                 property.Size = mapping.Size;
 
                 property.IsProcessed = true;

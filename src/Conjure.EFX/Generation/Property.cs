@@ -21,6 +21,8 @@ namespace Conjure.EFX.Generation
 
         public Type SystemType { get; set; }
 
+        public bool IsValueType { get; set; }
+
         public bool? IsNullable { get; set; }
 
         public bool IsRequired => IsNullable == false;

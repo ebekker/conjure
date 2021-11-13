@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.2.3</Version>
+	<ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.1.2.13</Version>
+    <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
 
-    <LangVersion>PREVIEW</LangVersion>
-
+  <PropertyGroup>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ebekker/conjure</PackageProjectUrl>
@@ -49,7 +51,7 @@
      - For reference:
      -    https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages
      -->
-    <PackageReference Include="Scriban" Version="4.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Scriban" Version="4.1.0" PrivateAssets="all" GeneratePathProperty="true" />
 
     <!-- Package the generator and any local project refs in the analyzer directory of the nuget package -->
     <!--
