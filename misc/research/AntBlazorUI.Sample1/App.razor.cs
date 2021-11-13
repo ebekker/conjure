@@ -14,6 +14,11 @@ public partial class App
                     Icon = "Layout",
                 },
 
+                new ScreenMenuItem<Pages.Test2>
+                {
+                    Icon = "Layout",
+                },
+
                 new NavMenuGroup
                 {
                     Icon = "layout",

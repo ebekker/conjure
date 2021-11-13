@@ -1,0 +1,17 @@
+﻿@page "/test2"
+@inherits ScreenBase
+<KitScreen Model=@this>
+
+    <h3>Test2</h3>
+
+    <AutoCompleteSearch @bind-Value=@search />
+
+    <div>
+        Search: @search
+    </div>
+
+</KitScreen>
+
+@code {
+    string search = "FOO";
+}
