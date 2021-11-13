@@ -13,6 +13,8 @@ namespace Conjure.NScribe
 
         public GeneratorExecutionContext GeneratorContext => _context;
 
+        public object TemplateData { get; init; }
+
         // public SymbolDisplayFormat SDF => SymbolDisplayFormat.FullyQualifiedFormat;
 
         // public string EntryPointClassName => _context.Compilation.GetEntryPoint(default).ContainingType.Name;

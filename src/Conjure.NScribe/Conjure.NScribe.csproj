@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Version>0.1.0</Version>
-
-    <LangVersion>PREVIEW</LangVersion>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <!-- <PropertyGroup>
@@ -32,14 +32,23 @@
    -->
 
   <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)\$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	  
     <!--
      - Take a private dependency on Scriban (PrivateAssets=all) Consumers of this generator will not reference it.
      - Set GeneratePathProperty=true so we can reference the binaries via the PKGScriban property
      - For reference:
      -    https://github.com/dotnet/roslyn/blob/main/docs/features/source-generators.cookbook.md#use-functionality-from-nuget-packages
      -->
-    <PackageReference Include="Scriban" Version="4.0.1"
-         PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Scriban" Version="4.1.0" PrivateAssets="all" GeneratePathProperty="true" />
+    <None Include="$(PKGScriban)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	  
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <None Include="$(PKGNewtonsoft_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	  
+    <PackageReference Include="YamlDotNet" Version="11.2.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <None Include="$(PKGYamlDotNet)\lib\netstandard1.3\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
   </ItemGroup>
 
   <PropertyGroup>
@@ -49,6 +58,8 @@
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGNewtonsoft_Json)\lib\netstandard2.0\*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGYamlDotNet)\lib\netstandard1.3\*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 

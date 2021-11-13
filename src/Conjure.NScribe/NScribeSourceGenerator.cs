@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Conjure.NScribe.ScribanImpl;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Scriban;
 using Scriban.Helpers;
 using Scriban.Parsing;
@@ -21,6 +23,28 @@ namespace Conjure.NScribe
     {
         public static string ConfigMarker = ".nscribe/";
         public static string ScribanExt = ".scriban-cs";
+        public static readonly IReadOnlyDictionary<string, Func<string, JObject>> DataExts = 
+            new (string fileExt, Func<string, JObject> parser)[]
+            {
+                (".json", ParseJson),
+                (".yaml", ParseYaml),
+            }.ToDictionary(kv => kv.fileExt, kv => kv.parser);
+
+        public const string TemplateDataFilesKey = "dataFiles";
+
+        public static JObject ParseJson(string text)
+        {
+            return JObject.Parse(text);
+        }
+
+        private static YamlDotNet.Serialization.Deserializer _yamlDeser = new();
+        public static JObject ParseYaml(string text)
+        {
+            using var reader = new StringReader(text);
+            var obj = _yamlDeser.Deserialize(reader);
+            var json = JsonConvert.SerializeObject(obj);
+            return JObject.Parse(json);
+        }
 
         public void Initialize(GeneratorInitializationContext context)
         {
@@ -69,8 +93,42 @@ namespace Conjure.NScribe
                     $"Found NScribe Config Path: {configShortName} {config}",
                     DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
 
-                var files = configFiles[config].Where(x => x.EndsWith(ScribanExt));
-                foreach (var asset in files)
+                var dataMaps = new Dictionary<string, object>();
+                JObject lastParse = null;
+                // var dataFiles = configFiles[config].Where(x => DataExts.Any(de => x.EndsWith(de.Key)));
+                var dataFilesAndParsers = configFiles[config]
+                    .Select(cf => (cf: cf, parser: DataExts.SingleOrDefault(de => cf.EndsWith(de.Key)).Value))
+                    .Where(cfde => cfde.parser != null);
+
+                foreach (var assetAndParser in dataFilesAndParsers)
+                {
+                    var asset = assetAndParser.cf;
+                    var parser = assetAndParser.parser;
+                    var assetShortName = Path.GetFileName(asset);
+                    if (!dataMaps.TryGetValue(TemplateDataFilesKey, out var filesEntry)
+                        || filesEntry is not List<string> files)
+                    {
+                        files = new();
+                        dataMaps[TemplateDataFilesKey] = files;
+                    }
+
+                    files.Add(assetShortName);
+                    //dataMaps[assetShortName] = parser(File.ReadAllText(asset));
+                    var jo = parser(File.ReadAllText(asset));
+                    if (lastParse == null)
+                    {
+                        lastParse = jo;
+                    }
+                    else
+                    {
+                        lastParse.Merge(jo);
+                    }
+                }
+
+                dataMaps["data"] = lastParse.ToObject<Dictionary<string, object>>();
+
+                var scribanFiles = configFiles[config].Where(x => x.EndsWith(ScribanExt));
+                foreach (var asset in scribanFiles)
                 {
                     var assetShortName = Path.GetFileName(asset);
                     var sourceName = $"{configShortName}/{assetShortName}".Replace("/", "__");
@@ -79,7 +137,10 @@ namespace Conjure.NScribe
                         $"Found NScribe Config Asset Path: {assetShortName} : {asset} : {sourceName}",
                         DiagnosticSeverity.Warning, DiagnosticSeverity.Warning, true, 1));
 
-                    var nscribeContext = new NScribeContext(context);
+                    var nscribeContext = new NScribeContext(context)
+                    {
+                        TemplateData = dataMaps,
+                    };
                     var scriptObject = new ScriptObject();
                     scriptObject.Import(typeof(MethodSupport));
                     scriptObject.Import(nscribeContext, SimpleFilter, SimpleRenamer);

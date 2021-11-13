@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Version>0.1.0</Version>
-
-    <LangVersion>PREVIEW</LangVersion>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
 </Project>
