@@ -43,7 +43,7 @@ public partial class KitDataList<TDataItem> : IActionContainer,
     }
 
     protected MudTable<TDataItem>? _table;
-    protected TableSorter<TDataItem>? _tableSorter;
+    protected DataSortPicker<TDataItem>? _dataSortPicker;
     protected bool _isLoading = true;
     protected string? _searchValue;
 
@@ -130,8 +130,8 @@ public partial class KitDataList<TDataItem> : IActionContainer,
 
                 if (sortKey == null)
                 {
-                    sortKey = _tableSorter?.SelectedSortKey;
-                    sortDir = _tableSorter?.SelectedSortDirection ?? sortDir;
+                    sortKey = _dataSortPicker?.SelectedSortKey;
+                    sortDir = _dataSortPicker?.SelectedSortDirection ?? sortDir;
                 }
 
                 var dataArgs = new LoadDataArgs<TDataItem>
