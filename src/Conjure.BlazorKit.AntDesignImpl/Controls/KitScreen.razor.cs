@@ -1,4 +1,5 @@
 ﻿using Conjure.BlazorKit.Events;
+using Microsoft.EntityFrameworkCore;
 
 namespace Conjure.BlazorKit.Controls;
 
@@ -9,6 +10,8 @@ public partial class KitScreen : IScreenContext
     [Parameter] public object? Model { get; set; }
 
     private bool _canExecute;
+
+    public event EventHandler<SavedChangesEventArgs>? SavedChanges;
 
     public void ScreenStateHasChanged() => StateHasChanged();
 

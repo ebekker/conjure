@@ -1,6 +1,6 @@
 ﻿@namespace Conjure.BlazorKit.Controls
 @if (_canExecute) {
-<CascadingValue TValue=@(IScreenContext) Value="this">
+<CascadingValue TValue=@(IScreenContext) Value=@(this)>
 	<Form Model=@Model>
 		@ChildContent
 	</Form>

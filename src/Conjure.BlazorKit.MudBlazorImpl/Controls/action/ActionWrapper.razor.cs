@@ -9,7 +9,7 @@ public partial class ActionWrapper
 {
     [Parameter] public IAction? Action { get; set; }
 
-    private bool _iconButton;
+    private bool _isIconButton;
     private string _label = default!;
     private string _description = default!;
     private string _icon = default!;
@@ -22,7 +22,7 @@ public partial class ActionWrapper
 
         var ka = Action as KitAction;
 
-        _iconButton = ka?.Label == null;
+        _isIconButton = string.IsNullOrWhiteSpace(ka?.Label);
         _label = ka?.Label ?? "Action";
         _description = ka?.Description ?? _label;
         _icon = ka?.Icon ?? Icons.Filled.RunCircle;
