@@ -1,10 +1,10 @@
 ﻿@namespace Conjure.BlazorKit.Controls
-<PageTitle>@Label</PageTitle>
+<PageTitle>@IsDirty@Label</PageTitle>
 @if (_canExecute)
 {
     <CascadingValue TValue=@IScreenContext Value=@this>
         <ScreenHeader>
-            <TitleContent>@Label</TitleContent>
+            <TitleContent>@IsDirty@Label</TitleContent>
             <Actions>@Actions</Actions>
         </ScreenHeader>
         @ChildContent
@@ -14,7 +14,3 @@ else
 {
     <b><i>[Access Denied]</i></b>
 }
-
-<div>
-    Screen Rendered at @DateTime.Now
-</div>

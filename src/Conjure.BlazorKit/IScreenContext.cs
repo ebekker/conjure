@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Conjure application framework.
+// Copyright (C) Conjure.
 
-namespace Conjure.BlazorKit
+using Microsoft.EntityFrameworkCore;
+
+namespace Conjure.BlazorKit;
+
+public interface IScreenContext
 {
-    public interface IScreenContext
-    {
-        void ScreenStateHasChanged();
-    }
+    event EventHandler<SavedChangesEventArgs>? SavedChanges;
+
+    void ScreenStateHasChanged();
 }

@@ -1,44 +1,59 @@
 ﻿@page "/test5"
+@using Microsoft.EntityFrameworkCore
 @inherits ScreenBase<DataWorkspace>
 
 <KitScreen Screen=@this>
     <Actions>
         <KitAction Binding=@(() => Action5()) />
-        <KitAction Binding=@(() => Action6())
-                   CanInvoke=@((arg) => arg.Result = canInvoke) />
+        <KitAction Binding=@(() => SaveChanges())
+                   CanInvoke=@((arg) => arg.Result = CanSaveChanges()) />
     </Actions>
     <ChildContent>
-        <div>
-            <KitTextField Binding=@(() => someSampleText) /> : @someSampleText
-        </div>
-        <div>
-            <KitCheckbox Binding=@(() => canInvoke) /> : @canInvoke
-        </div>
-        <div>
-            <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers) />
-        </div>
-        <div>
-            <div>Selected Customer: @_selectedCustomer</div>
-            <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers)
-                         @bind-SelectedItem=_selectedCustomer
-                         AllowSearch=@true>
-                <SortBy>
-                    <KitSortBy Binding=@(item => item!.FirstName) />
-                    <KitSortBy Binding=@(item => item!.LastName) />
-                    <KitSortBy Binding=@(item => item!.EmailAddress) />
-                </SortBy>
-                <SearchBy>
-                    <KitSearchBy Binding=@((item) => item!.FirstName) />
-                    <KitSearchBy Binding=@((item) => item!.LastName) />
-                    <KitSearchBy Binding=@((item) => item!.EmailAddress) />
-                </SearchBy>
-                <ItemTemplate>
-                    @context!.FirstName @context.LastName
-                </ItemTemplate>
+        <MudGrid>
+            <MudItem md="8">
+                @* Need to specify TDataItem until https://github.com/dotnet/aspnetcore/issues/25588 *@
+                <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers) TDataItem=@(Customer)
+                             @ref=_customerDataList
+                             @bind-SelectedItem=_selectedCustomer
+                             AllowSearch=@true>
+                    <SortBy>
+                        <KitSortBy Binding=@(item => item!.FirstName) />
+                        <KitSortBy Binding=@(item => item!.LastName) />
+                        <KitSortBy Binding=@(item => item!.EmailAddress) />
+                    </SortBy>
+                    <SearchBy>
+                        <KitSearchBy Binding=@((item) => item!.FirstName) />
+                        <KitSearchBy Binding=@((item) => item!.LastName) />
+                        <KitSearchBy Binding=@((item) => item!.EmailAddress) />
+                    </SearchBy>
+                    <Actions>
+                        <KitAction Binding=@(() => AddCustomer())
+                            Label="" Description="Add new customer" Icon=@Icons.Filled.Add/>
+                        <KitAction Binding=@(() => DelCustomer())
+                            CanInvoke=@(arg => arg.Result = _selectedCustomer != null)
+                            Label="" Description="Delete customer" Icon=@Icons.Filled.Delete/>
+                    </Actions>
+                    <ItemTemplate>
+                        @GetEntityState(context!)
+                        @context!.FirstName @context.LastName
+                    </ItemTemplate>
 
-            </KitDataList>
-        </div>
-
+                </KitDataList>
+                <div>Selected Customer: @_selectedCustomer</div>
+            </MudItem>
+            <MudItem md="4">
+                <KitTextField Binding=@(() => _selectedCustomer!.FirstName) />
+                <KitTextField Binding=@(() => _selectedCustomer!.MiddleName) />
+                <KitTextField Binding=@(() => _selectedCustomer!.LastName) />
+                <KitTextField Binding=@(() => _selectedCustomer!.EmailAddress) />
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+            <MudItem md="12">
+                @* Need to specify TDataItem until https://github.com/dotnet/aspnetcore/issues/25588 *@
+                <KitDataList Binding=@(() => DWS.AdventureWorksLT2017.Customers) TDataItem=@(Customer) />
+            </MudItem>
+        </MudGrid>
     </ChildContent>
 </KitScreen>
 
@@ -48,6 +63,8 @@
     private string? someSampleText;
     private bool canInvoke;
 
+    private KitDataList<Customer> _customerDataList;
+
     private Customer? _selectedCustomer;
 
     private Task Action5()
@@ -56,9 +73,50 @@
         return Task.CompletedTask;
     }
 
-    private Task Action6()
+    private bool CanSaveChanges()
     {
-        Console.WriteLine("Action #6 Invoked");
-        return Task.CompletedTask;
+        return DWS.HasChanges();
+    }
+
+    private async Task SaveChanges()
+    {
+        await DWS.SaveChangesAsync();
+    }
+
+    string GetEntityState(object entity)
+    {
+        if (!DWS.GetEntityEntry(entity, out var entry))
+            return "?";
+
+        return entry!.State switch
+        {
+            EntityState.Unchanged => "",
+            EntityState.Added => "⨹",  // ➕⍉➖❌❔❓⁉ minus
+            EntityState.Deleted => "⍉",
+            EntityState.Modified => "Δ",
+            EntityState.Detached => "~",
+            _ => "??",
+        };
+    }
+
+    async Task AddCustomer()
+    {
+        var entity = DWS.AdventureWorksLT2017.Customers.CreateProxy();
+
+        entity.PasswordHash = "NONE";
+        entity.PasswordSalt = "NONE";
+
+        var entry = DWS.AdventureWorksLT2017.Customers.Add(entity);
+        _selectedCustomer = entry.Entity;
+        await _customerDataList.ReloadData();
+    }
+
+    async Task DelCustomer()
+    {
+        if (_selectedCustomer == null)
+            return;
+
+        DWS.AdventureWorksLT2017.Remove(_selectedCustomer);
+        await _customerDataList.ReloadData();
     }
 }

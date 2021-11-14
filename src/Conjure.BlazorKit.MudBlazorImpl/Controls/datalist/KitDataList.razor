@@ -1,6 +1,6 @@
 ﻿@namespace Conjure.BlazorKit.Controls
 @using Conjure.BlazorKit.Data
-@typeparam TDataItem
+@typeparam TDataItem where TDataItem : class
 <CascadingValue TValue=@(IDataSorter<TDataItem>) Value=@this>
     @SortBy
 </CascadingValue>
@@ -11,8 +11,14 @@
     @Actions
 </CascadingValue>
 <MudTable T=@(TDataItem) @ref=@_table Dense=@true Hover=@true FixedHeader=@true Loading=@_isLoading
-    ServerData=@OnLoadData @bind-SelectedItem=@SelectedItemBound
+    ServerData=@OnLoadData
     RowStyleFunc=@((v,i) => object.Equals(v, SelectedItem) ? "background-color: #e0e0e0;" : "")>
+
+    @*
+    SelectedItem=@SelectedItem
+    SelectedItemChanged=@(TemporarySetSelectItem)
+    SelectedItemChanged=@(async (TDataItem? val) => await SelectedItemChanged.InvokeAsync(val))
+    *@
 
     <ToolBarContent>
         <MudText Typo=@Typo.h6>@Label</MudText>
@@ -42,7 +48,7 @@
         @** TODO: This onclick handler is a temporary fix for a weird behavior where
             MudTable selection does not work right inside of an outer template control,
             see the comment with the TemporarySetSelectedItem method for more details *@
-        <MudTd @onclick=@(ev => TemporarySetSelectItem(context))>
+        <MudTd @onclick=@(async ev => await TemporarySetSelectItem(context))>
             @ItemTemplate.Invoke(context)
         </MudTd>
     </RowTemplate>

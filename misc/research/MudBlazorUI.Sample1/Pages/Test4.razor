@@ -16,12 +16,14 @@
         </div>
         <div>
             <div>SelectedItem: @_selected1</div>
-            <KitDataList Binding=@(() => myLocalCustomers)
+            @* Need to specify TDataItem until https://github.com/dotnet/aspnetcore/issues/25588 *@
+            <KitDataList Binding=@(() => myLocalCustomers) TDataItem=@(MyCustomer)
                          @bind-SelectedItem=_selected1 />
         </div>
         <div>
             <div>SelectedItem: @_selected2</div>
-            <KitDataList Binding=@(() => myLocalCustomers)
+            @* Need to specify TDataItem until https://github.com/dotnet/aspnetcore/issues/25588 *@
+            <KitDataList Binding=@(() => myLocalCustomers) TDataItem=@(MyCustomer)
                          @bind-SelectedItem=_selected2
                          AllowSearch=@true>
                 <SortBy>

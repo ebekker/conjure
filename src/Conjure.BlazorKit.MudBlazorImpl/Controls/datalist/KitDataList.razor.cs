@@ -14,7 +14,8 @@ namespace Conjure.BlazorKit.Controls;
 
 [CascadingTypeParameter(nameof(TDataItem))]
 public partial class KitDataList<TDataItem> : IActionContainer,
-        IDataSorter<TDataItem>, IDataSearcher<TDataItem>
+    IDataSorter<TDataItem>, IDataSearcher<TDataItem>, IDisposable
+    where TDataItem : class
 {
     private static readonly RenderFragment<TDataItem> DefaultItemTemplate = (item) => delegate (RenderTreeBuilder builder)
     {
@@ -38,7 +39,7 @@ public partial class KitDataList<TDataItem> : IActionContainer,
     TDataItem? SelectedItemBound
     {
         get => SelectedItem;
-        set => _ = SelectedItemChanged.InvokeAsync(value);
+        set => _ = InvokeAsync(async () => await SelectedItemChanged.InvokeAsync(value));
     }
 
     protected MudTable<TDataItem>? _table;
@@ -73,12 +74,17 @@ public partial class KitDataList<TDataItem> : IActionContainer,
 
     protected override void OnInitialized()
     {
-        //if (_binder != null && DataLoader == null)
-        //{
-        //    // TODO: replace with more complete default DataLoader for IQueryable
-        //    var searchFields = _searchFields.Where(f => f.Predicate != null).ToArray();
-        //    DataLoader = DataItemLoader.Create<TDataItem>(_binder, searchFields);
-        //}
+        Screen.SavedChanges += Screen_SavedChanges;
+    }
+
+    public void Dispose()
+    {
+        Screen.SavedChanges -= Screen_SavedChanges;
+    }
+
+    private async void Screen_SavedChanges(object? sender, Microsoft.EntityFrameworkCore.SavedChangesEventArgs e)
+    {
+        await InvokeAsync(ReloadData);
     }
 
     void IActionContainer.Add(IAction action) => _actions.Add(action);
@@ -86,11 +92,14 @@ public partial class KitDataList<TDataItem> : IActionContainer,
     void IDataSorter<TDataItem>.Add(IDataSortKey<TDataItem> sk) => _sortKeys.Add(sk);
     void IDataSearcher<TDataItem>.Add(IDataSearchField<TDataItem> sf) => _searchFields.Add(sf);
 
-    //public async Task ReloadData()
-    //{
-    //    await _table!.ReloadServerData();
-    //    Screen.ScreenStateHasChanged();
-    //}
+    /// <summary>
+    /// Forces the data list control to refresh its backing data set.
+    /// </summary>
+    public async Task ReloadData()
+    {
+        await _table!.ReloadServerData();
+        Screen.ScreenStateHasChanged();
+    }
 
     private async Task OnSearch(string search)
     {
@@ -170,9 +179,15 @@ public partial class KitDataList<TDataItem> : IActionContainer,
     // with null (or specifically the preceding selected item).  Not sure the cause
     // but a temporary fix is to handle the selection behavior ourselves in our own
     // wrapper control for now which calls into this method to set selection
-    Task TemporarySetSelectItem(TDataItem item)
+    async Task TemporarySetSelectItem(TDataItem item)
     {
-        SelectedItemBound = item;
-        return Task.CompletedTask;
+        Console.WriteLine($"{DateTime.Now.ToString("yyyyMMdd_hhmmss")} Setting Selected: {item}");
+        //SelectedItemBound = item;
+
+        //SelectedItemBound = item;
+        SelectedItem = item;
+        await SelectedItemChanged.InvokeAsync(item);
+        StateHasChanged();
+        Screen.ScreenStateHasChanged();
     }
 }

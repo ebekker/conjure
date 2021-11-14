@@ -1,6 +1,8 @@
 ﻿// Conjure application framework.
 // Copyright (C) Conjure.
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conjure.BlazorKit.Data;
@@ -16,7 +18,6 @@ public class DataWorkspaceBase : IDisposable
     {
         _scopeFactory = scopeFactory;
         _scope = _scopeFactory.CreateScope();
-        Console.Error.WriteLine("Creating WORKSPACE: " + GetHashCode());
     }
 
     protected TDbContext CreateContext<TDbContext>()
@@ -27,6 +28,8 @@ public class DataWorkspaceBase : IDisposable
 
     protected void AddContext(DbContextBase db, Action? onDispose = null)
     {
+        db.SavedChanges += Db_SavedChanges;
+
         _dbContexts.Add(new()
         {
             _db = db,
@@ -34,16 +37,65 @@ public class DataWorkspaceBase : IDisposable
         });
     }
 
+    private void Db_SavedChanges(object? sender, SavedChangesEventArgs e)
+    {
+        SavedChanges?.Invoke(sender, e);
+    }
+
+    public event EventHandler<SavedChangesEventArgs>? SavedChanges;
+
     protected int CountContexts => _dbContexts.Count;
 
     protected IEnumerable<DbContextBase> AllContexts => _dbContexts.Select(x => x._db!);
+
+    public bool HasChanges()
+    {
+        return AllContexts.Any(c => c.ChangeTracker.HasChanges());
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        foreach (var context in AllContexts)
+        {
+            await context.SaveChangesAsync();
+        }
+    }
+
+    public bool GetEntityEntry(object entity, out EntityEntry? entry)
+    {
+        foreach (var context in AllContexts)
+        {
+            var entityEntry = context.Entry(entity);
+            if (entityEntry != null && entityEntry.State != EntityState.Detached)
+            {
+                entry = entityEntry;
+                return true;
+            }
+        }
+        entry = null;
+        return false;
+    }
+
+    //RenderFragment EntityStateIndicator(object entity) => _db.Entry(entity).State switch
+    //{
+    //    EntityState.Added => EntityAdded,
+    //    EntityState.Modified => EntityModified,
+    //    EntityState.Deleted => EntityDeleted,
+    //    EntityState.Detached => EntityDetached,
+    //    _ => EntityDefault,
+    //};
+
 
     protected void DisposeContexts()
     {
         foreach (var context in _dbContexts)
         {
-            context._db?.Dispose();
-            context._onDispose?.Invoke();
+            if (context._db != null)
+            {
+                context._db.SavedChanges -= Db_SavedChanges;
+                context._db.Dispose();
+                context._onDispose?.Invoke();
+            }
         }
         _dbContexts.Clear();
     }
@@ -55,7 +107,6 @@ public class DataWorkspaceBase : IDisposable
             if (disposing)
             {
                 // TODO: dispose managed state (managed objects)
-                Console.Error.WriteLine("Disposing WORKSPACE: " + GetHashCode());
                 DisposeContexts();
                 _scope.Dispose();
             }
