@@ -23,7 +23,7 @@
         <MudSpacer />
         @if (_sortKeys.Count > 0)
         {
-            <TableSorter @ref=_tableSorter Class="mx-3" SortKeys=@_sortKeys />
+            <DataSortPicker @ref=_tableSorter Class="mx-3" SortKeys=@_sortKeys />
         }
         @if (AllowSearch)
         {

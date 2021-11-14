@@ -8,7 +8,7 @@ using SortDir = Conjure.BlazorKit.Data.SortDirection;
 
 namespace Conjure.BlazorKit.Controls;
 
-public partial class TableSorter<TDataItem>
+public partial class DataSortPicker<TDataItem>
 {
     public static readonly IEnumerable<IDataSortKey<TDataItem>> EmptySortKeys =
         Enumerable.Empty<IDataSortKey<TDataItem>>();
