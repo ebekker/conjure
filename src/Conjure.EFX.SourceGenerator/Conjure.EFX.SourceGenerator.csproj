@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.1.2.13</Version>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageBuild>1</PackageBuild>
+    <PackageVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(PackageBuild)</PackageVersion>
+
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ebekker/conjure</PackageProjectUrl>

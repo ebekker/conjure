@@ -1,0 +1,16 @@
+<Project>
+  
+  <PropertyGroup>
+    <!--
+      For ref:
+        https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
+    -->
+    <VersionMajor>0</VersionMajor>
+    <VersionMinor>2</VersionMinor>
+    <VersionPatch>0</VersionPatch>
+    <VersionBuild>0</VersionBuild>
+
+    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionBuild)</VersionPrefix>
+  </PropertyGroup>
+
+</Project>

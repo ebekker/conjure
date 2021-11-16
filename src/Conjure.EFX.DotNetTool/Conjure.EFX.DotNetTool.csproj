@@ -3,11 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.1.2.13</Version>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageBuild>1</PackageBuild>
+    <PackageVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(PackageBuild)</PackageVersion>
+
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>efx</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -51,6 +53,6 @@
     <None Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <Import Project="_ignore/nuget.targets" Condition="Exists('_ignore/nuget.targets')" />
+  <Import Project="_IGNORE/nuget.targets" Condition="Exists('_IGNORE/nuget.targets')" />
 
 </Project>

@@ -5,11 +5,21 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Conjure.BlazorKit</RootNamespace>
-    <Version>0.1.0</Version>
 
     <!-- https://github.com/dotnet/aspnetcore/issues/38238#issuecomment-964622487 -->
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageBuild>1</PackageBuild>
+    <PackageVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(PackageBuild)</PackageVersion>
+
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ebekker/conjure</PackageProjectUrl>
+    <Authors>https://github.com/ebekker/conjure/graphs/contributors</Authors>
+  </PropertyGroup>
+
 
   <ItemGroup>
     <Using Include="Microsoft.AspNetCore.Components" />
@@ -32,5 +42,7 @@
     <ProjectReference Include="..\Conjure.BlazorKit\Conjure.BlazorKit.csproj" />
     <ProjectReference Include="..\Conjure.Blazor\Conjure.Blazor.csproj" />
   </ItemGroup>
+
+  <Import Project="_IGNORE/nuget.targets" Condition="Exists('_IGNORE/nuget.targets')" />
 
 </Project>
