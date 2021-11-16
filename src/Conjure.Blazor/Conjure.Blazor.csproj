@@ -4,7 +4,6 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>0.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,9 +15,11 @@
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Humanizer" Version="2.11.10" />
+  <ItemGroup>
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+		<PackageReference Include="Humanizer" Version="2.11.10" />
 	</ItemGroup>
 
 </Project>
