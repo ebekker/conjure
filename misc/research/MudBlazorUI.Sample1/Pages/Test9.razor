@@ -1,0 +1,22 @@
+﻿@page "/test9"
+@inherits ScreenBase<DataWorkspace>
+
+<KitScreen Screen=@this>
+
+    <KitTextField Binding=@(() => search) />
+
+    <MudButton OnClick=@(OnSearch)>Search</MudButton>
+
+    <ul>
+    @foreach (var c in _customers)
+    {
+        <li>
+            @c
+        </li>
+    }
+    </ul>
+
+</KitScreen>
+
+@code {
+}

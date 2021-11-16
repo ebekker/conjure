@@ -21,6 +21,8 @@ public partial class KitScreen : IScreenContext, IDisposable
 
     public void ScreenStateHasChanged() => StateHasChanged();
 
+    public ScreenBase GetScreen() => Screen!;
+
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         await base.SetParametersAsync(parameters);

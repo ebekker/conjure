@@ -16,7 +16,7 @@ public partial class KitSearchBy<TDataItem> : IDataSearchField<TDataItem>
     /// Specifying a binding in the context of the current TDataItem to derive a label and search field
     /// expression, or specify both the <see cref="Label"/> and the <see cref="Expression"/> explicitly.
     /// </summary>
-    [Parameter] public Expression<Func<TDataItem, string>>? Binding { get; set; }
+    [Parameter] public Expression<Func<TDataItem, object>>? Binding { get; set; }
 
     /// <summary>
     /// Specify a descriptive label for the search field, or override the default label derived from <see cref="Binding"/>.
@@ -33,7 +33,7 @@ public partial class KitSearchBy<TDataItem> : IDataSearchField<TDataItem>
     /// </summary>
     [Parameter] public bool CaseInsensitive { get; set; }
 
-    private ValueBinder<TDataItem, string>? _binder;
+    private ValueBinder<TDataItem, object>? _binder;
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {

@@ -10,4 +10,6 @@ public interface IScreenContext
     event EventHandler<SavedChangesEventArgs>? SavedChanges;
 
     void ScreenStateHasChanged();
+
+    ScreenBase GetScreen();
 }

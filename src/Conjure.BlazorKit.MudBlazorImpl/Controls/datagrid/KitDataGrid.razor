@@ -1,0 +1,103 @@
+﻿@namespace Conjure.BlazorKit.Controls
+@using Conjure.BlazorKit.Data
+@typeparam TDataItem where TDataItem : class
+<CascadingValue Value=@this>
+    @Fields
+</CascadingValue>
+@*
+<CascadingValue TValue=@(IDataSorter<TDataItem>) Value=@this>
+    @SortBy
+</CascadingValue>
+<CascadingValue TValue=@(IDataSearcher<TDataItem>) Value=@this>
+    @SearchBy
+</CascadingValue>
+*@
+<CascadingValue TValue=@(IActionContainer) Value=@this>
+    @Actions
+</CascadingValue>
+<MudTable T=@(TDataItem) @ref=@_table Dense=@true Hover=@true FixedHeader=@true Loading=@_isLoading
+    ServerData=@OnLoadData
+    @bind-SelectedItem=@SelectedItem
+    RowStyleFunc=@((v,i) => object.Equals(v, SelectedItem) ? "background-color: #e0e0e0;" : "")>
+
+    @*
+    SelectedItem=@SelectedItem
+    SelectedItemChanged=@(TemporarySetSelectItem)
+    SelectedItemChanged=@(async (TDataItem? val) => await SelectedItemChanged.InvokeAsync(val))
+    *@
+
+    <ToolBarContent>
+        <MudText Typo=@Typo.h6>@Label</MudText>
+        @foreach (var action in _actions)
+        {
+            <ActionWrapper Action=@action />
+        }
+        <MudSpacer />
+        @* Normally we allow sorting by the colum header only, but we support this optionally *@
+        @if (ShowSortPicker && _sortKeys.Count > 0)
+        {
+            <DataSortPicker @ref=_dataSortPicker Class="mx-3" SortKeys=@_sortKeys />
+        }
+        @if (AllowSearch)
+        {
+            <MudTextField T="string" PlaceHolder="Search" 
+                Adornment="Adornment.Start"  AdornmentIcon="@Icons.Material.Filled.Search"
+                IconSize="Size.Medium" Class="mt-0" Style="position: relative; top: -5px;"
+                ValueChanged=@OnSearch Clearable=@true></MudTextField>
+        }
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh Style="width: 30px;"></MudTh>
+        @foreach (var f in _fields)
+        {
+            int fIndex = 0;
+            if (f.SortByExpression != null)
+            {
+                <MudTh><MudTableSortLabel T=@TDataItem SortLabel=@($"f__{fIndex}")
+                    >@f.Label</MudTableSortLabel></MudTh>
+            }
+            else
+            {
+                <MudTh>@f.Label</MudTh>
+            }
+            fIndex++;
+        }
+    </HeaderContent>
+
+    <NoRecordsContent>
+        <i>no matching records found</i>
+    </NoRecordsContent>
+
+    <RowTemplate>
+        @** TODO: This onclick handler is a temporary fix for a weird behavior where
+            MudTable selection does not work right inside of an outer template control,
+            see the comment with the TemporarySetSelectedItem method for more details *@
+@*        <MudTd @onclick=@(async ev => await TemporarySetSelectItem(context))>
+            @ItemTemplate.Invoke(context)
+        </MudTd>
+*@
+        <MudTd Style="width: 30px; text-align: center;">@GetEntityState(context)</MudTd>
+        @foreach (var f in _fields)
+        {
+            <MudTd @onclick=@(async ev => await TemporarySetSelectItem(context))>
+                @f.ChildContent?.Invoke(context)
+            </MudTd>
+        }
+    </RowTemplate>
+
+    <FooterContent>
+        @** Loading indicator seems broken when using ServerData function so we implement our own *@ 
+        @if (_isLoading)
+        {
+            <td colspan="1000">
+                <MudProgressLinear Color=@Color.Info Class="mud-table-loading-progress" Indeterminate="true" />
+            </td>
+        }
+    </FooterContent>
+
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+
+</MudTable>

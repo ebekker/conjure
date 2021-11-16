@@ -100,6 +100,11 @@ namespace MudBlazorUI.Sample1
                                 {
                                     Icon = Icons.Custom.Uncategorized.Radioactive,
                                 },
+
+                                new ScreenMenuItem<Pages.Test99>
+                                {
+                                    Icon = Icons.Custom.Uncategorized.Radioactive,
+                                },
                             },
                         },
                     },

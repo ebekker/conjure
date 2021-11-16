@@ -38,7 +38,10 @@ public static class PredicateBuilder
     private static readonly ConstantExpression NullConstantExpression = Expression.Constant(null);
     private static readonly ConstantExpression IgnoreCaseConstantExpression = Expression.Constant(StringComparison.OrdinalIgnoreCase);
 
-    public static Expression<Func<T, bool>> Contains<T>(this Expression<Func<T, string>> expr1,
+    // TODO: losing strongly-typed STRING return to make it
+    // more generic for KitField, what does this break???
+    //public static Expression<Func<T, bool>> Contains<T>(this Expression<Func<T, string>> expr1,
+    public static Expression<Func<T, bool>> Contains<T>(this Expression<Func<T, object>> expr1,
         string arg, bool caseInsensitive = false)
     {
         var con = Expression.Constant(arg);
