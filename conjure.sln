@@ -62,6 +62,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{888A384D-1A47-40FA-8A9D-783F1CD94320}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conjure.BlazorKit.MudBlazorImpl", "src\Conjure.BlazorKit.MudBlazorImpl\Conjure.BlazorKit.MudBlazorImpl.csproj", "{20CDC45A-2B31-42FE-8508-5219941E0962}"
