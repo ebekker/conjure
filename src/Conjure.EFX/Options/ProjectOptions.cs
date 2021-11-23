@@ -39,5 +39,17 @@
             get => GetProperty();
             set => SetProperty(value);
         }
+
+        /// <summary>
+        /// Gets or sets the templates to use for code generation.
+        /// </summary>
+        /// <value>
+        /// The templates to use for code generation.
+        /// </value>
+        public string Templates
+        {
+            get => GetProperty();
+            set => SetProperty(value);
+        }
     }
 }

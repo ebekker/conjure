@@ -17,9 +17,24 @@ namespace Conjure.EFX.Options
         {
             Provider = DatabaseProviders.SqlServer;
             TableNaming = TableNaming.Singular;
+
+            Name = "{Database.ModelDatabaseName}";
+
             Tables = new List<string>();
             Schemas = new List<string>();
             Exclude = new List<MatchOptions>();
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the database within the DB model.
+        /// </summary>
+        /// <value>
+        /// The name of the database within the DB model.
+        /// </value>
+        public string ModelDatabaseName
+        {
+            get => GetProperty();
+            set => SetProperty(value);
         }
 
         /// <summary>
@@ -33,7 +48,6 @@ namespace Conjure.EFX.Options
             get => GetProperty();
             set => SetProperty(value);
         }
-
 
         /// <summary>
         /// Gets or sets the database to generate code for.

@@ -40,7 +40,7 @@ namespace Conjure.EFX.Impl
             entityContext.DatabaseName = databaseModel.DatabaseName;
 
             // update database variables
-            _options.Database.Name = ToLegalName(databaseModel.DatabaseName);
+            _options.Database.ModelDatabaseName = ToLegalName(databaseModel.DatabaseName);
 
             string projectNamespace = _options.Project.Namespace;
             _options.Project.Namespace = projectNamespace;

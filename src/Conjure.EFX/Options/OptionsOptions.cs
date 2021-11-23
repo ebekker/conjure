@@ -1,4 +1,4 @@
-namespace Conjure.EFX.Options
+﻿namespace Conjure.EFX.Options
 {
     /// <summary>
     /// Options file meta data.
@@ -52,7 +52,7 @@ namespace Conjure.EFX.Options
             get { return GetProperty(); }
             set { }
         }
-        
+
         /// <summary>
         /// Gets the full path to the parent directory containing the profile directory.
         /// This value is computed and read-only, and cannot be set.
@@ -61,6 +61,18 @@ namespace Conjure.EFX.Options
         /// The full path to the parent of the profile directory.
         /// </value>
         public string ProfileParentPath
+        {
+            get { return GetProperty(); }
+            set { }
+        }
+
+        public string SharedOutputDirectory
+        {
+            get { return GetProperty(); }
+            set { }
+        }
+
+        public string ProfileOutputDirectory
         {
             get { return GetProperty(); }
             set { }
@@ -93,6 +105,9 @@ namespace Conjure.EFX.Options
             SetProperty(profilePath, nameof(ProfilePath));
             SetProperty(optionsPath, nameof(FullPath));
             SetProperty(Path.GetDirectoryName(profilePath), nameof(ProfileParentPath));
+
+            SetProperty(_profile.SharedOutputPath, nameof(SharedOutputDirectory));
+            SetProperty(_profile.ProfileOutputPath, nameof(ProfileOutputDirectory));
 
             // // Special handling for *.efg.* sub-extension
             // var filename = Path.GetFileNameWithoutExtension(path);

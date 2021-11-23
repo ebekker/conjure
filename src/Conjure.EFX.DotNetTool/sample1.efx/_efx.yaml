@@ -1,17 +1,23 @@
 project:
-  namespace: '{Database.Name}.Core'
+  #namespace: '{Database.Name}.Core'
   namespace: 'Tracker.Core'
   directory: '{Options.ProfileParentPath}/_efx/{Options.ProfileName}'
+  
+  #templates: asm://Conjure.EFX.DotNetTool/templates.yaml
+  #templates: file://{Options.ProfileParentPath}/foo/bar/templates.yaml
+  #templates: /{Options.ProfileParentPath}/foo/bar/templates.yaml
+  #templates: templates.yaml
 database:
   provider: SqlServer
   connectionString: Data Source=(local)\SQLEXPRESS;Initial Catalog=Tracker;Integrated Security=True
   exclude:
+    ## Exclude meta data used by EF Core migrations if it exists
     - exact: 'dbo.SchemaVersions'
 data:
   context:
     name: '{Database.Name}Context'
     #baseClass: DbContext
-    baseClass: TrackerContextBase
+    #baseClass: TrackerContextBase
     namespace: '{Project.Namespace}.Data'
     directory: '{Project.Directory}\Data'
     document: true

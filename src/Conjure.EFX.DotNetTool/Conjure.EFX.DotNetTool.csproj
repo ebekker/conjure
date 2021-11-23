@@ -1,10 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conjure\Conjure.csproj" />
+    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
+    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
+  </ItemGroup>
 
   <PropertyGroup>
     <PackageBuild>1</PackageBuild>
@@ -17,12 +23,6 @@
     <PackageProjectUrl>https://github.com/ebekker/conjure</PackageProjectUrl>
     <Authors>https://github.com/ebekker/conjure/graphs/contributors</Authors>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Conjure\Conjure.csproj" />
-    <ProjectReference Include="..\Conjure.EFX\Conjure.EFX.csproj" />
-    <ProjectReference Include="..\Conjure.PipeTalk\Conjure.PipeTalk.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
@@ -49,10 +49,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="_efx/*/preview/**" />
+    <Compile Remove="_efx/profiles/**" />
+    <None Remove="res\templates.yaml" />
+    <None Remove="res\templates\DataContext.scriban-cs" />
+    <None Remove="res\templates\Entity.scriban-cs" />
+    <None Remove="res\templates\EntityMapping.scriban-cs" />
+
+    <EmbeddedResource Include="res\templates.yaml">
+      <LogicalName>res.templates.yaml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="res\templates\DataContext.scriban-cs">
+      <LogicalName>res.templates.DataContext.scriban-cs</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="res\templates\Entity.scriban-cs">
+      <LogicalName>res.templates.Entity.scriban-cs</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="res\templates\EntityMapping.scriban-cs">
+      <LogicalName>res.templates.EntityMapping.scriban-cs</LogicalName>
+    </EmbeddedResource>
+
     <None Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <Import Project="_IGNORE/nuget.targets" Condition="Exists('_IGNORE/nuget.targets')" />
+  <Import Project="../_IGNORE/nuget-local.targets" Condition="Exists('../_IGNORE/nuget-local.targets')" />
 
 </Project>

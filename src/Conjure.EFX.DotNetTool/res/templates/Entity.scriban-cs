@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+
+namespace {{Entity.EntityNamespace}}
+{
+    {{~
+    $entityClass = Entity.EntityClass | to_safe_name
+    -}}
+
+    {{-if Options.Data.Entity.Document~}}
+    /// <summary>
+    /// Entity class representing data for table '{{Entity.TableName}}'
+    /// </summary>
+    {{~end~}}
+    public partial class {{$entityClass}}{{if Entity.EntityBaseClass}}
+        : {{Entity.EntityBaseClass | to_safe_name}}{{end}}
+    {
+        {{~## GenerateConstructor(); ##~}}
+        {{~if Options.Data.Entity.Document~}}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{{$entityClass}}"/> class.
+        /// </summary>
+        {{~end~}}
+        public {{$entityClass}}()
+        {
+            #region Generated Constructor
+
+            {{~for $rel in ((Entity.Relationships |
+                array.filter @(do;ret $0.Cardinality == 'Many';end)) |
+                array.sort 'PropertyName')-}}
+
+            {{~
+            $propertyName     = $rel.PropertyName | to_safe_name
+            $primaryNamespace = $rel.PrimaryEntity.EntityNamespace
+            $primaryName      = $rel.PrimaryEntity.EntityClass | to_safe_name
+            $primaryFullName  = Entity.EntityNamespace != $primaryNamespace ? $primaryNamespace + "." + $primaryName : $primaryName
+            ~}}
+            {{$propertyName}} = new HashSet<{{$primaryFullName}}>();
+            {{~end~}}
+
+            #endregion // Generated Constructor
+        }
+
+        {{~## GenerateProperties(); ##~}}
+        #region Generated Properties
+
+        {{~for $prop in Entity.Properties~}}
+        {{~
+        $propertyType = $prop.SystemType | to_nullable_type $prop.IsNullable 'CSharp'
+        $propertyName = $prop.PropertyName | to_safe_name
+        ~}}
+        {{~if Options.Data.Entity.Document~}}
+        /// <summary>
+        /// Gets or sets the property value representing column '{{$prop.ColumnName}}'.
+        /// </summary>
+        /// <value>
+        /// The property value representing column '{{$prop.ColumnName}}'.
+        /// </value>
+        {{~end~}}
+        public {{$propertyType}} {{$propertyName}} { get; set; }
+
+        {{~end~}}
+        #endregion // Generated Properties
+
+        {{~## GenerateRelationshipProperties(); ##~}}
+        #region Generated Relationships
+
+        {{~for $rel in (Entity.Relationships | array.sort 'PropertyName')~}}
+            {{~
+            $propertyName     = $rel.PropertyName | to_safe_name
+            $primaryNamespace = $rel.PrimaryEntity.EntityNamespace
+            $primaryName      = $rel.PrimaryEntity.EntityClass | to_safe_name
+            $primaryFullName  = Entity.EntityNamespace != $primaryNamespace ? $primaryNamespace + "." + $primaryName : $primaryName
+            ~}}
+            {{~if $rel.Cardinality == 'Many'~}}
+                {{~if Options.Data.Entity.Document~}}
+        /// <summary>
+        /// Gets or sets the navigation collection for entity <see cref="{{$primaryFullName}}" />.
+        /// </summary>
+        /// <value>
+        /// The the navigation collection for entity <see cref="{{$primaryFullName}}" />.
+        /// </value>
+                {{~end~}}
+        public virtual ICollection<{{$primaryFullName}}> {{$propertyName}} { get; set; }
+
+            {{~else~}}
+                {{~if Options.Data.Entity.Document~}}
+        /// <summary>
+        /// Gets or sets the navigation property for entity <see cref="{{$primaryFullName}}" />.
+        /// </summary>
+        /// <value>
+        /// The the navigation property for entity <see cref="{{$primaryFullName}}" />.
+        /// </value>
+                    {{~for $prop in $rel.Properties~}}
+        /// <seealso cref="{{$prop.PropertyName}}" />
+                    {{~end~}}
+                {{~end~}}
+        public virtual {{$primaryFullName}} {{$propertyName}} {get; set; }
+        
+            {{~end~}}
+        {{~end~}}
+        #endregion // Generated Relationships
+    }
+}

@@ -1,4 +1,4 @@
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using System.Text;
 using Conjure.PipeTalk;
 using McMaster.Extensions.CommandLineUtils;
@@ -8,9 +8,9 @@ namespace Conjure.EFX.DotNetTool.CommandLine
     [Command(ShowInHelpText = false)]
     public class PipeGenCommand : BaseCommand
     {
-        private IProfileOptionsSerializer _serializer;
-        private IModelCacheBuilder _cacheBuilder;
-        private ICodeGenerator _codeGenerator;
+        private readonly IProfileOptionsSerializer _serializer;
+        private readonly IModelCacheBuilder _cacheBuilder;
+        private readonly ICodeGenerator _codeGenerator;
 
         public PipeGenCommand(IProfileOptionsSerializer serializer, IModelCacheBuilder cacheBuilder,
             ICodeGenerator codeGenerator)
@@ -57,8 +57,10 @@ namespace Conjure.EFX.DotNetTool.CommandLine
                     var options = _serializer.Load(profile);
                     var model = _cacheBuilder.LoadFromCache(options);
 
+                    var tc = GenerateCommand.ResolveTemplates(options);
+
                     server.StartProfile(profile.Name);
-                    _codeGenerator.Generate(options, model, server.AddFile);
+                    _codeGenerator.Generate(options, model, tc, server.AddFile);
                 }
             }
             catch (Exception ex)

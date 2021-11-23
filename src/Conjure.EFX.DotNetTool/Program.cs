@@ -1,6 +1,7 @@
 ﻿using Conjure.EFX.DotNetTool.CommandLine;
 using Conjure.EFX.Impl;
 using McMaster.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils.HelpText;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
@@ -10,7 +11,8 @@ namespace Conjure.EFX.DotNetTool
     [Subcommand(
         typeof(ListCommand),
         typeof(RefreshCommand),
-        typeof(PreviewCommand),
+        typeof(GenerateCommand),
+        typeof(ProfileCommand),
         typeof(PipeGenCommand),
         typeof(PipeTestCommand)
     )]
@@ -18,7 +20,17 @@ namespace Conjure.EFX.DotNetTool
     {
         public static async Task<int> Main(string[] args)
         {
-            var cla = new CommandLineApplication<Program>();
+            var htg = new DefaultHelpTextGenerator()
+            {
+                // Instead of alphabetical order, we list in definition order
+                // which is more indicative of the typical usage order
+                SortCommandsByName = false,
+            };
+            var cla = new CommandLineApplication<Program>()
+            {
+                // We override the default to control the display order of commands
+                HelpTextGenerator = htg,
+            };
 
             cla.Conventions
                 .UseDefaultConventions()

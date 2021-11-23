@@ -1,3 +1,6 @@
+﻿// Conjure application framework.
+// Copyright (C) Conjure.
+
 using Conjure.EFX.ModelCache;
 using Conjure.EFX.Options;
 using Microsoft.EntityFrameworkCore.Design;
@@ -23,9 +26,8 @@ namespace Conjure.EFX.Impl
                 [DatabaseProviders.PostgreSQL] = "Npgsql.EntityFrameworkCore.PostgreSQL.Design.Internal.NpgsqlDesignTimeServices",
                 [DatabaseProviders.Oracle] = "Oracle.EntityFrameworkCore.Design.Internal.OracleDesignTimeServices",
                 [DatabaseProviders.Sqlite] = "Microsoft.EntityFrameworkCore.Sqlite.Design.Internal.SqliteDesignTimeServices",
-                [DatabaseProviders.SqlServer] =
-                    //"Microsoft.EntityFrameworkCore.SqlServer.Design.Internal.SqlServerDesignTimeServices",
-                    "Microsoft.EntityFrameworkCore.SqlServer.Design.Internal.SqlServerDesignTimeServices, Microsoft.EntityFrameworkCore.SqlServer",
+                //[DatabaseProviders.SqlServer] = "Microsoft.EntityFrameworkCore.SqlServer.Design.Internal.SqlServerDesignTimeServices",
+                [DatabaseProviders.SqlServer] = "Microsoft.EntityFrameworkCore.SqlServer.Design.Internal.SqlServerDesignTimeServices, Microsoft.EntityFrameworkCore.SqlServer",
             };
 
         private readonly ILogger _logger;
@@ -48,7 +50,7 @@ namespace Conjure.EFX.Impl
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
 
-            var dir = Path.GetFullPath(options.Project.Directory);
+            var dir = Path.GetFullPath(options.Options.ProfileOutputDirectory);
             var ser = Path.Combine(dir, DefaultModelCacheFileName);
 
             _logger.LogInformation("Computed DB model cache file: {modelCacheFile}", ser);
@@ -142,7 +144,7 @@ namespace Conjure.EFX.Impl
             dbModel.AddAnnotation("EFX:Args",
                 System.Environment.GetCommandLineArgs().ToList());
 
-            var dir = Path.GetFullPath(options.Project.Directory);
+            var dir = Path.GetFullPath(options.Options.ProfileOutputDirectory);
             var ser = Path.Combine(dir, DefaultModelCacheFileName);
             _logger.LogInformation("Computed DB model cache file: {modelCacheFile}", ser);
 

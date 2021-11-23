@@ -1,11 +1,12 @@
-using McMaster.Extensions.CommandLineUtils;
+﻿using McMaster.Extensions.CommandLineUtils;
 
 namespace Conjure.EFX.DotNetTool.CommandLine
 {
+    [Command(Description = "refresh the local cache of the Profile's data model from the target DB")]
     public class RefreshCommand : BaseCommand
     {
-        private IProfileOptionsSerializer _serializer;
-        private IModelCacheBuilder _cacheBuilder;
+        private readonly IProfileOptionsSerializer _serializer;
+        private readonly IModelCacheBuilder _cacheBuilder;
 
         public RefreshCommand(IProfileOptionsSerializer serializer, IModelCacheBuilder cacheBuilder)
         {
