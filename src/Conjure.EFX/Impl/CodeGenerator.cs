@@ -20,9 +20,9 @@ public class CodeGenerator : ICodeGenerator
     private readonly ILogger _logger;
     private readonly ModelGenerator _modelGenerator;
 
-    private string[] _topTemplates;
-    private string[] _entityTemplates;
-    private string[] _entityModelTemplates;
+    //private string[] _topTemplates;
+    //private string[] _entityTemplates;
+    //private string[] _entityModelTemplates;
 
     public CodeGenerator(ILoggerFactory logger)
     {
@@ -46,14 +46,14 @@ public class CodeGenerator : ICodeGenerator
 
         var context = _modelGenerator.Generate(Options, databaseModel, databaseProviders.mapping);
 
-        var topTemplatesPath = Path.GetFullPath(Path.Combine(Options.Options.ProfilePath, "templates"));
-        _topTemplates = Directory.GetFiles(topTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+        //var topTemplatesPath = Path.GetFullPath(Path.Combine(Options.Options.ProfilePath, "templates"));
+        //_topTemplates = Directory.GetFiles(topTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
 
-        var childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities"));
-        _entityTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+        //var childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities"));
+        //_entityTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
 
-        childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities/models"));
-        _entityModelTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
+        //childTemplatesPath = Path.GetFullPath(Path.Combine(topTemplatesPath, "entities/models"));
+        //_entityModelTemplates = Directory.GetFiles(childTemplatesPath, "*.scriban-cs", SearchOption.TopDirectoryOnly);
 
         GenerateFiles(context, writer);
     }
@@ -156,94 +156,6 @@ public class CodeGenerator : ICodeGenerator
         Directory.CreateDirectory(outputDir);
 
         var template = Template.Parse(templateBody);
-        var output = template.Render(templateContext);
-        writer(outputPath, output);
-    }
-
-    private void OldGenerateFiles(EntityContext entityContext, CodeGeneratorWriter writer)
-    {
-        Entity targetEntity = null;
-
-        var genContext = new EFXGeneratorContext
-        {
-            Options = Options,
-            EntityContext = entityContext,
-        };
-        var scriptObject = new ScriptObject();
-        scriptObject.Import(typeof(MethodSupport));
-        scriptObject.Import(typeof(GenerationExtensions));
-        scriptObject.Import(genContext, renamer: mi => mi.Name);
-        scriptObject.Import("Entity", () => targetEntity);
-        var templateContext = new TemplateContext
-        {
-            MemberRenamer = mi => mi.Name,
-        };
-        templateContext.PushGlobal(scriptObject);
-
-        foreach (var templatePath in _topTemplates)
-        {
-            OldGenerateTemplateFile(writer, entityContext, templatePath, templateContext);
-        }
-
-        if (_entityTemplates.Length > 0)
-        {
-            foreach (var entity in entityContext.Entities)
-            {
-                Options.Variables.Set(entity);
-                targetEntity = entity;
-
-                foreach (var templatePath in _entityTemplates)
-                {
-                    OldGenerateTemplateFile(writer, entityContext, templatePath, templateContext, "entities");
-
-                    if (_entityModelTemplates.Length > 0 && entity.Models.Count > 0)
-                    {
-                        foreach (var model in entity.Models)
-                        {
-                            Options.Variables.Set(model);
-                            genContext.EntityModel = model;
-
-                            foreach (var modelTemplatePath in _entityModelTemplates)
-                            {
-                                OldGenerateTemplateFile(writer, entityContext, modelTemplatePath, templateContext, "entities/models");
-                            }
-
-                            genContext.EntityModel = null;
-                            Options.Variables.Remove(model);
-                        }
-                    }
-                }
-
-                Options.Variables.Remove(entity);
-            }
-        }
-
-        // GenerateDataContext(entityContext);
-        // GenerateEntityClasses(entityContext);
-        // GenerateMappingClasses(entityContext);
-
-        // if (Options.Data.Query.Generate)
-        //     GenerateQueryExtensions(entityContext);
-
-        // GenerateModelClasses(entityContext);
-
-        // GenerateScriptTemplates(entityContext);
-    }
-
-    private void OldGenerateTemplateFile(CodeGeneratorWriter writer, EntityContext entityContext,
-        string templatePath, TemplateContext templateContext, string outputPrefix = null)
-    {
-        var templateName = Path.GetFileNameWithoutExtension(templatePath);
-        var outputPath = Path.Combine(Options.Project.Directory, "preview", outputPrefix ?? "", $"{templateName}.cs");
-        outputPath = Path.GetFullPath(outputPath);
-        outputPath = Options.Variables.Evaluate(outputPath);
-        _logger.LogInformation("Generating from template [{0}] to [{1}]", templateName, outputPath);
-
-        var outputDir = Path.GetDirectoryName(outputPath);
-        Directory.CreateDirectory(outputDir);
-
-        var content = File.ReadAllText(templatePath);
-        var template = Template.Parse(content);
         var output = template.Render(templateContext);
         writer(outputPath, output);
     }
