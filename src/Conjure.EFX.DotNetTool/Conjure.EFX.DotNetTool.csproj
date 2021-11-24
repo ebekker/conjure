@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PackageBuild>2</PackageBuild>
+    <PackageBuild>1</PackageBuild>
     <PackageVersion>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(PackageBuild)</PackageVersion>
 
     <PackAsTool>true</PackAsTool>
@@ -49,7 +49,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="sample1.efx\_IGNORE\templates.OLD\entities\models\**" />
     <Compile Remove="_efx/profiles/**" />
+    <EmbeddedResource Remove="sample1.efx\_IGNORE\templates.OLD\entities\models\**" />
+    <None Remove="sample1.efx\_IGNORE\templates.OLD\entities\models\**" />
     <None Remove="res\templates.yaml" />
     <None Remove="res\templates\DataContext.scriban-cs" />
     <None Remove="res\templates\Entity.scriban-cs" />

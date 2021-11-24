@@ -7,7 +7,7 @@
     -->
     <VersionMajor>0</VersionMajor>
     <VersionMinor>2</VersionMinor>
-    <VersionPatch>5</VersionPatch>
+    <VersionPatch>6</VersionPatch>
     <VersionBuild>0</VersionBuild>
 
     <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionBuild)</VersionPrefix>
